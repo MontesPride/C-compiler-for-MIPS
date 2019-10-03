@@ -58,9 +58,54 @@ public class Tokeniser {
         if (Character.isWhitespace(c))
             return next();
 
+        // recognises the assign operator
+        if (c == '=')
+            return new Token(TokenClass.ASSIGN, line, column);
+
+        // recognises the left bracket
+        if (c == '{')
+            return new Token(TokenClass.LBRA, line, column);
+        // recognises the right bracket
+        if (c == '}')
+            return new Token(TokenClass.RBRA, line, column);
+        // recognises the left parentheses
+        if (c == '(')
+            return new Token(TokenClass.LPAR, line, column);
+        // recognises the right parentheses
+        if (c == ')')
+            return new Token(TokenClass.RPAR, line, column);
+        // recognises the left square bracket
+        if (c == '[')
+            return new Token(TokenClass.LSBR, line, column);
+        // recognises the right square bracket
+        if (c == ']')
+            return new Token(TokenClass.RSBR, line, column);
+        // recognises the semicolon
+        if (c == ';')
+            return new Token(TokenClass.SC, line, column);
+        // recognises the comma
+        if (c == ',')
+            return new Token(TokenClass.COMMA, line, column);
+
         // recognises the plus operator
         if (c == '+')
             return new Token(TokenClass.PLUS, line, column);
+        // recognises the minus operator
+        if (c == '-')
+            return new Token(TokenClass.MINUS, line, column);
+        // recognises the asterix character (multiplication or pointers)
+        if (c == '*')
+            return new Token(TokenClass.ASTERIX, line, column);
+        // recognises the division operator
+        if (c == '/')
+            return new Token(TokenClass.DIV, line, column);
+        // recognises the modulo operator
+        if (c == '%')
+            return new Token(TokenClass.REM, line, column);
+
+        // recognises the dot operator
+        if (c == '.')
+            return new Token(TokenClass.DOT, line, column);
 
         // ... to be completed
 
