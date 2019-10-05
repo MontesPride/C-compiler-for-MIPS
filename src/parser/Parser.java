@@ -152,7 +152,7 @@ public class Parser {
 
     private void parseVarDecls() {
         // to be completed ...
-        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT) && (lookAhead(2).tokenClass.equals(TokenClass.SC) || lookAhead(2).tokenClass.equals(TokenClass.LSBR))) {
+        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT) && (lookAhead(2).tokenClass.equals(TokenClass.SC) || lookAhead(2).tokenClass.equals(TokenClass.LSBR) || lookAhead(3).tokenClass.equals(TokenClass.SC) || lookAhead(3).tokenClass.equals(TokenClass.LSBR))) {
             parseType();
             expect(TokenClass.IDENTIFIER);
             Token varDeclToken = expect(TokenClass.SC, TokenClass.LSBR);
@@ -168,7 +168,7 @@ public class Parser {
 
     private void parseFunDecls() {
         // to be completed ...
-        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT) && lookAhead(2).tokenClass.equals(TokenClass.LPAR)) {
+        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT) && (lookAhead(2).tokenClass.equals(TokenClass.LPAR) || lookAhead(3).tokenClass.equals(TokenClass.LPAR))) {
             parseType();
             expect(TokenClass.IDENTIFIER);
             expect(TokenClass.LPAR);
