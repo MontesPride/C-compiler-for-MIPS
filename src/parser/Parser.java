@@ -9,7 +9,7 @@ import java.util.Queue;
 
 
 /**
- * @author cdubach
+ * @author sfilipiak
  */
 public class Parser {
 

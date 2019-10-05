@@ -6,7 +6,7 @@ import java.io.EOFException;
 import java.io.IOException;
 
 /**
- * @author cdubach
+ * @author sfilipiak
  */
 public class Tokeniser {
 
@@ -60,8 +60,17 @@ public class Tokeniser {
 
         // recognises the #include
         if (c == '#') {
-            Token nextToken = next();
-            if (nextToken.tokenClass.equals(TokenClass.IDENTIFIER) && nextToken.data.equals("include")) {
+            StringBuilder data = new StringBuilder();
+            String include = "include";
+            for (int i = 0; i < include.length(); i++) {
+                if (scanner.peek() == include.charAt(i)) {
+                    data.append(include.charAt(i));
+                    c = scanner.next();
+                } else {
+                    break;
+                }
+            }
+            if (data.toString().equals(include)) {
                 return new Token(TokenClass.INCLUDE, line, column);
             } else {
                 error(c, line, column);
@@ -168,10 +177,9 @@ public class Tokeniser {
         // recognises the int literal
         if (Character.isDigit(c)) {
             StringBuilder data = new StringBuilder(String.valueOf(c));
-            c = scanner.peek();
-            while (Character.isDigit(c)) {
-                data.append(c);
-                c = scanner.next();
+            while (Character.isDigit(scanner.peek())) {
+                data.append(scanner.peek());
+                scanner.next();
             }
             return new Token(TokenClass.INT_LITERAL, data.toString(), line, column);
         }
