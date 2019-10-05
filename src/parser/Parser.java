@@ -166,7 +166,7 @@ public class Parser {
         // to be completed ...
         if (accept(TokenClass.SC,TokenClass.LSBR)) {
             Token varDeclToken = expect(TokenClass.SC, TokenClass.LSBR);
-            if (varDeclToken.tokenClass.equals(TokenClass.LSBR)) {
+            if (varDeclToken != null && varDeclToken.tokenClass.equals(TokenClass.LSBR)) {
                 nextToken();
                 expect(TokenClass.INT_LITERAL);
                 expect(TokenClass.RSBR);
@@ -181,8 +181,8 @@ public class Parser {
             parseType();
             expect(TokenClass.IDENTIFIER);
             if (accept(TokenClass.SC,TokenClass.LSBR)) {
-                Token varDeclToken = expect(TokenClass.SC, TokenClass.LSBR);
-                if (varDeclToken.tokenClass.equals(TokenClass.LSBR)) {
+                Token varDeclOnlyToken = expect(TokenClass.SC, TokenClass.LSBR);
+                if (varDeclOnlyToken != null && varDeclOnlyToken.tokenClass.equals(TokenClass.LSBR)) {
                     nextToken();
                     expect(TokenClass.INT_LITERAL);
                     expect(TokenClass.RSBR);
@@ -276,7 +276,7 @@ public class Parser {
                 case STRING_LITERAL:
                     parseExpression();
                     Token statementToken = expect(TokenClass.ASSIGN, TokenClass.SC);
-                    if (statementToken.tokenClass.equals(TokenClass.ASSIGN)) {
+                    if (statementToken != null && statementToken.tokenClass.equals(TokenClass.ASSIGN)) {
                         parseExpression();
                         expect(TokenClass.SC);
                     }
@@ -300,7 +300,7 @@ public class Parser {
             switch (token.tokenClass) {
                 case LPAR:
                     Token expressionLPARToken = lookAhead(1);
-                    if (expressionLPARToken.tokenClass.equals(TokenClass.INT) || expressionLPARToken.tokenClass.equals(TokenClass.CHAR) || expressionLPARToken.tokenClass.equals(TokenClass.VOID) || expressionLPARToken.tokenClass.equals(TokenClass.STRUCT))
+                    if (expressionLPARToken != null && (expressionLPARToken.tokenClass.equals(TokenClass.INT) || expressionLPARToken.tokenClass.equals(TokenClass.CHAR) || expressionLPARToken.tokenClass.equals(TokenClass.VOID) || expressionLPARToken.tokenClass.equals(TokenClass.STRUCT)))
                         parseTypeCast();
                     else {
                         nextToken();
@@ -319,7 +319,8 @@ public class Parser {
                     parseSizeOf();
                     break;
                 case IDENTIFIER:
-                    if (lookAhead(1).tokenClass.equals(TokenClass.LPAR))
+                    Token identifierToken = lookAhead(1);
+                    if (identifierToken != null && identifierToken.tokenClass.equals(TokenClass.LPAR))
                         parseFuncCall();
                     else
                         nextToken();
