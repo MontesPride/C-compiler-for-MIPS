@@ -60,7 +60,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Fibonacci-parser">
+  <component name="RunManager" selected="Application.Tictactoe-parser">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -384,7 +384,14 @@
       <option name="project" value="LOCAL" />
       <updated>1570298112226</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="struct declaration fix">
+      <created>1570299030906</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1570299030906</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -407,6 +414,7 @@
     <MESSAGE value="Fixed #include to work as it was explained on piazza." />
     <MESSAGE value="Fixed the identifier definition" />
     <MESSAGE value="Initial version of a parser. Passes fibonacci and tictactoe sample tests. I am curious to see how it does with the scoreboard tests." />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial version of a parser. Passes fibonacci and tictactoe sample tests. I am curious to see how it does with the scoreboard tests." />
+    <MESSAGE value="struct declaration fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="struct declaration fix" />
   </component>
 </project>

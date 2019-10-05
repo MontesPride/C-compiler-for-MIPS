@@ -123,8 +123,8 @@ public class Parser {
     private void parseProgram() {
         parseIncludes();
         parseStructDecls();
-        parseVarDecls();
-        parseFunDecls();
+        parseVarAndFunDecls();
+        parseVarAndFunDecls();
         expect(TokenClass.EOF);
     }
 
@@ -150,11 +150,21 @@ public class Parser {
         }
     }
 
-    private void parseVarDecls() {
-        // to be completed ...
-        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT) && (lookAhead(2).tokenClass.equals(TokenClass.SC) || lookAhead(2).tokenClass.equals(TokenClass.LSBR) || lookAhead(3).tokenClass.equals(TokenClass.SC) || lookAhead(3).tokenClass.equals(TokenClass.LSBR))) {
+    private void parseVarAndFunDecls() {
+        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT)) {
             parseType();
             expect(TokenClass.IDENTIFIER);
+            if (accept(TokenClass.SC, TokenClass.LSBR)) {
+                parseVarDecls();
+            } else if (accept(TokenClass.LPAR)) {
+                parseFunDecls();
+            }
+        }
+    }
+
+    private void parseVarDecls() {
+        // to be completed ...
+        if (accept(TokenClass.SC,TokenClass.LSBR)) {
             Token varDeclToken = expect(TokenClass.SC, TokenClass.LSBR);
             if (varDeclToken.tokenClass.equals(TokenClass.LSBR)) {
                 nextToken();
@@ -162,20 +172,35 @@ public class Parser {
                 expect(TokenClass.RSBR);
                 expect(TokenClass.SC);
             }
-            parseVarDecls();
+            parseVarAndFunDecls();
+        }
+    }
+
+    private void parseVarDeclsOnly() {
+        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT)) {
+            parseType();
+            expect(TokenClass.IDENTIFIER);
+            if (accept(TokenClass.SC,TokenClass.LSBR)) {
+                Token varDeclToken = expect(TokenClass.SC, TokenClass.LSBR);
+                if (varDeclToken.tokenClass.equals(TokenClass.LSBR)) {
+                    nextToken();
+                    expect(TokenClass.INT_LITERAL);
+                    expect(TokenClass.RSBR);
+                    expect(TokenClass.SC);
+                }
+                parseVarDeclsOnly();
+            }
         }
     }
 
     private void parseFunDecls() {
         // to be completed ...
-        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT) && (lookAhead(2).tokenClass.equals(TokenClass.LPAR) || lookAhead(3).tokenClass.equals(TokenClass.LPAR))) {
-            parseType();
-            expect(TokenClass.IDENTIFIER);
-            expect(TokenClass.LPAR);
+        if (accept(TokenClass.LPAR)) {
+            nextToken();
             parseParamsList();
             expect(TokenClass.RPAR);
             parseBlock();
-            parseFunDecls();
+            parseVarAndFunDecls();
         }
     }
 
@@ -265,7 +290,7 @@ public class Parser {
 
     private void parseBlock() {
         expect(TokenClass.LBRA);
-        parseVarDecls();
+        parseVarDeclsOnly();
         parseStatement();
         expect(TokenClass.RBRA);
     }
