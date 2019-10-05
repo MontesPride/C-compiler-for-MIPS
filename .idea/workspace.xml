@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Fixed #include to work as it was explained on piazza.">
+      <change afterPath="$PROJECT_DIR$/grammar/cfg.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lexer/Tokeniser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexer/Tokeniser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fibonacci.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fibonacci.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -60,7 +61,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Fibonacci-lexer">
+  <component name="RunManager" selected="Application.Tictactoe-parser">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -201,10 +202,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Fibonacci-lexer" type="Application" factoryName="Application" temporary="true">
+    <configuration name="Fibonacci-lexer" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="ct-19-20" />
       <option name="PROGRAM_PARAMETERS" value="-lexer tests/fibonacci.c dummy.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Fibonacci-parser" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-parser tests/fibonacci.c dummy.out" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -213,6 +222,14 @@
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="ct-19-20" />
       <option name="PROGRAM_PARAMETERS" value="-lexer tests/tictactoe.c dummy.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Tictactoe-parser" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-parser tests/tictactoe.c dummy.out" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -284,13 +301,10 @@
     </configuration>
     <list>
       <item itemvalue="Application.Tictactoe-lexer" />
+      <item itemvalue="Application.Fibonacci-parser" />
       <item itemvalue="Application.Fibonacci-lexer" />
+      <item itemvalue="Application.Tictactoe-parser" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.Fibonacci-lexer" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SbtLocalSettings">
     <option name="modificationStamps">
@@ -357,7 +371,14 @@
       <option name="project" value="LOCAL" />
       <updated>1570274493138</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Fixed the identifier definition">
+      <created>1570275411170</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1570275411170</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -378,6 +399,7 @@
     <MESSAGE value="Added warning about creating a branch if Part 1 deadline has not yet passed." />
     <MESSAGE value="Lexer is fully working now. Still not sure if the #include parsing is correct on piazza. Gcc compiler acts differently to what was said." />
     <MESSAGE value="Fixed #include to work as it was explained on piazza." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed #include to work as it was explained on piazza." />
+    <MESSAGE value="Fixed the identifier definition" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed the identifier definition" />
   </component>
 </project>
