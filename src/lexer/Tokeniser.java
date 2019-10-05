@@ -184,7 +184,7 @@ public class Tokeniser {
             return new Token(TokenClass.INT_LITERAL, data.toString(), line, column);
         }
 
-        if (Character.isLetter(c)) {
+        if (Character.isLetter(c) || c == '_') {
             StringBuilder data = new StringBuilder(String.valueOf(c));
             while (Character.isLetterOrDigit(scanner.peek()) || scanner.peek() == '_') {
                 c = scanner.next();
