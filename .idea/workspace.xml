@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Fixed #include to work as it was explained on piazza.">
-      <change afterPath="$PROJECT_DIR$/tests/myTest.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fibonacci.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fibonacci.c" afterDir="false" />
@@ -61,7 +60,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.myTest-parser">
+  <component name="RunManager" selected="Application.myTest-lexer">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -424,7 +423,14 @@
       <option name="project" value="LOCAL" />
       <updated>1570299808533</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Fixes: Struct declaration,">
+      <created>1570309174469</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1570309174469</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -450,6 +456,7 @@
     <MESSAGE value="struct declaration fix" />
     <MESSAGE value="Variable and function declarations change, to make the code look nicer and better in general." />
     <MESSAGE value="Minor stylistic fixes. Ready for overnight test." />
-    <option name="LAST_COMMIT_MESSAGE" value="Minor stylistic fixes. Ready for overnight test." />
+    <MESSAGE value="Fixes: Struct declaration," />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixes: Struct declaration," />
   </component>
 </project>

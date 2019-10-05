@@ -164,6 +164,8 @@ public class Parser {
                 parseVarDecls();
             } else if (accept(TokenClass.LPAR)) {
                 parseFunDecls();
+            } else {
+                expect(TokenClass.SC, TokenClass.LSBR, TokenClass.LPAR);
             }
         }
     }
