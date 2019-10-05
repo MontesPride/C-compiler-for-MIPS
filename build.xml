@@ -18,7 +18,7 @@
 		  on the commandline.		     
 		  -->
 <!-- Replace the value of the attribute "name" with the name of YOUR project. -->
-<project basedir="." default="build" name="ct-19-20">
+<project basedir="." default="build" name="Compiling Techniques">
   <!-- You do not need to touch anything below this comment -->
   <property name="src" location="src"/>
   <property name="bin" location="bin"/>
