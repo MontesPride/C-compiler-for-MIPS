@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Fixed #include to work as it was explained on piazza.">
+      <change afterPath="$PROJECT_DIR$/tests/myTest.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fibonacci.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fibonacci.c" afterDir="false" />
@@ -60,7 +61,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Fibonacci-parser">
+  <component name="RunManager" selected="Application.myTest-parser">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -239,6 +240,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="myTest-lexer" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-lexer tests/myTest.c dummy.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="myTest-parser" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-parser tests/myTest.c dummy.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -303,6 +320,8 @@
       <item itemvalue="Application.Fibonacci-parser" />
       <item itemvalue="Application.Fibonacci-lexer" />
       <item itemvalue="Application.Tictactoe-parser" />
+      <item itemvalue="Application.myTest-parser" />
+      <item itemvalue="Application.myTest-lexer" />
     </list>
   </component>
   <component name="SbtLocalSettings">
@@ -398,7 +417,14 @@
       <option name="project" value="LOCAL" />
       <updated>1570299548956</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Minor stylistic fixes. Ready for overnight test.">
+      <created>1570299808533</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1570299808533</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -423,6 +449,7 @@
     <MESSAGE value="Initial version of a parser. Passes fibonacci and tictactoe sample tests. I am curious to see how it does with the scoreboard tests." />
     <MESSAGE value="struct declaration fix" />
     <MESSAGE value="Variable and function declarations change, to make the code look nicer and better in general." />
-    <option name="LAST_COMMIT_MESSAGE" value="Variable and function declarations change, to make the code look nicer and better in general." />
+    <MESSAGE value="Minor stylistic fixes. Ready for overnight test." />
+    <option name="LAST_COMMIT_MESSAGE" value="Minor stylistic fixes. Ready for overnight test." />
   </component>
 </project>
