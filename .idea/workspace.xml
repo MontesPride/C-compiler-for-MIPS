@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Fixed #include to work as it was explained on piazza.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lexer/Tokeniser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexer/Tokeniser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fibonacci.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fibonacci.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -60,7 +60,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.myTest-lexer">
+  <component name="RunManager" selected="Application.Fibonacci-lexer">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -430,7 +430,14 @@
       <option name="project" value="LOCAL" />
       <updated>1570309174469</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Fixed struct declaration.">
+      <created>1570309432621</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1570309432621</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -457,6 +464,7 @@
     <MESSAGE value="Variable and function declarations change, to make the code look nicer and better in general." />
     <MESSAGE value="Minor stylistic fixes. Ready for overnight test." />
     <MESSAGE value="Fixes: Struct declaration," />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixes: Struct declaration," />
+    <MESSAGE value="Fixed struct declaration." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed struct declaration." />
   </component>
 </project>

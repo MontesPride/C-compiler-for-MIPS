@@ -88,6 +88,8 @@ public class Tokeniser {
 
         //recognises the multi line comment
         if (c == '/' && scanner.peek() == '*') {
+            scanner.next();
+            c = scanner.next();
             while (!(c == '*' && scanner.peek() == '/'))
                 c = scanner.next();
             scanner.next();
