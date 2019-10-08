@@ -110,8 +110,8 @@ public class Parser {
     }
 
     /*
-    * Returns true if the current token is equals to any of the expected ones.
-    */
+     * Returns true if the current token is equals to any of the expected ones.
+     */
     private boolean accept(TokenClass... expected) {
         boolean result = false;
         for (TokenClass e : expected)
@@ -254,17 +254,17 @@ public class Parser {
                     expect(TokenClass.LPAR);
                     parseExpression();
                     expect(TokenClass.RPAR);
-                    parseStatement();
+                    parseStatementOnly();
                     break;
                 case IF:
                     nextToken();
                     expect(TokenClass.LPAR);
                     parseExpression();
                     expect(TokenClass.RPAR);
-                    parseStatement();
+                    parseStatementOnly();
                     if (accept(TokenClass.ELSE)) {
                         nextToken();
-                        parseStatement();
+                        parseStatementOnly();
                     }
                     break;
                 case RETURN:
@@ -293,6 +293,60 @@ public class Parser {
                     break;
             }
             parseStatement();
+        }
+    }
+
+    private void parseStatementOnly() {
+        if (accept(TokenClass.LBRA, TokenClass.WHILE, TokenClass.IF, TokenClass.RETURN, TokenClass.LPAR, TokenClass.MINUS, TokenClass.ASTERIX, TokenClass.SIZEOF, TokenClass.IDENTIFIER, TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL)) {
+            switch (token.tokenClass) {
+                case LBRA:
+                    parseBlock();
+                    break;
+                case WHILE:
+                    nextToken();
+                    expect(TokenClass.LPAR);
+                    parseExpression();
+                    expect(TokenClass.RPAR);
+                    parseStatementOnly();
+                    break;
+                case IF:
+                    nextToken();
+                    expect(TokenClass.LPAR);
+                    parseExpression();
+                    expect(TokenClass.RPAR);
+                    parseStatementOnly();
+                    if (accept(TokenClass.ELSE)) {
+                        nextToken();
+                        parseStatementOnly();
+                    }
+                    break;
+                case RETURN:
+                    nextToken();
+                    if (!accept(TokenClass.SC)) {
+                        parseExpression();
+                    }
+                    expect(TokenClass.SC);
+                    break;
+                case LPAR:
+                case MINUS:
+                case ASTERIX:
+                case SIZEOF:
+                case IDENTIFIER:
+                case INT_LITERAL:
+                case CHAR_LITERAL:
+                case STRING_LITERAL:
+                    parseExpression();
+                    Token statementToken = expect(TokenClass.ASSIGN, TokenClass.SC);
+                    if (statementToken != null && statementToken.tokenClass.equals(TokenClass.ASSIGN)) {
+                        parseExpression();
+                        expect(TokenClass.SC);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            expect(TokenClass.LBRA, TokenClass.WHILE, TokenClass.IF, TokenClass.RETURN, TokenClass.LPAR, TokenClass.MINUS, TokenClass.ASTERIX, TokenClass.SIZEOF, TokenClass.IDENTIFIER, TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL);
         }
     }
 
@@ -338,6 +392,8 @@ public class Parser {
                     break;
             }
             parseExpressionWithoutLeftRecursion();
+        } else {
+            expect(TokenClass.LPAR, TokenClass.MINUS, TokenClass.ASTERIX, TokenClass.SIZEOF, TokenClass.IDENTIFIER, TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL);
         }
     }
 

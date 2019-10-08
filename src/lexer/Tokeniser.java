@@ -118,12 +118,22 @@ public class Tokeniser {
                         case 'f':
                             data.append('\f');
                             break;
+                        case '\'':
+                            data.append('\'');
+                            break;
+                        case '"':
+                            data.append('"');
+                            break;
+                        case '\\':
+                            data.append('\\');
+                            break;
                         case '0':
                             data.append('\0');
                             break;
                         default:
-                            data.append(scanner.peek());
-                            break;
+                            scanner.next();
+                            error(c, line, column);
+                            return new Token(TokenClass.INVALID, line, column);
                     }
                 } else {
                     data.append(scanner.peek());
@@ -155,12 +165,22 @@ public class Tokeniser {
                     case 'f':
                         data.append('\f');
                         break;
+                    case '\'':
+                        data.append('\'');
+                        break;
+                    case '"':
+                        data.append('"');
+                        break;
+                    case '\\':
+                        data.append('\\');
+                        break;
                     case '0':
                         data.append('\0');
                         break;
                     default:
-                        data.append(scanner.peek());
-                        break;
+                        scanner.next();
+                        error(c, line, column);
+                        return new Token(TokenClass.INVALID, line, column);
                 }
             } else {
                 data.append(scanner.peek());
