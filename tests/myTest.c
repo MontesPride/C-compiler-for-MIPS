@@ -75,5 +75,18 @@ int main() {
         a = (10);
     }
 
+    a();
+    b(1);
+    b(1,2,3);
+    b((1));
+    b(1 == 2);
+    b();
+    c(a[1]);
+    c(a>1>2);
+
     return 0;
+}
+
+void dupa(int a, char b, struct vector c) {
+
 }

@@ -435,8 +435,10 @@ public class Parser {
                     break;
                 case LSBR:
                     parseArrayAccess();
+                    break;
                 case DOT:
                     parseFieldAccess();
+                    break;
                 default:
                     break;
             }

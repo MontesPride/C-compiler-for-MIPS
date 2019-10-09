@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Fixed #include to work as it was explained on piazza.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/grammar/cfg.txt" beforeDir="false" afterPath="$PROJECT_DIR$/grammar/cfg.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fibonacci.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fibonacci.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/myTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/myTest.c" afterDir="false" />
@@ -453,7 +452,14 @@
       <option name="project" value="LOCAL" />
       <updated>1570566290292</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Minor fix">
+      <created>1570647285319</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1570647285319</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -483,6 +489,18 @@
     <MESSAGE value="Fixed struct declaration." />
     <MESSAGE value="Fixed multi line comment. (Now /*/ doesnt pass as a start and an end of a comment)" />
     <MESSAGE value="Character escaping fix (according to the specification). Parser fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Character escaping fix (according to the specification). Parser fix" />
+    <MESSAGE value="Minor fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Minor fix" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/parser/Parser.java</url>
+          <line>417</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
