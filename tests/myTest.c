@@ -71,5 +71,9 @@ int main() {
         iterator = iterator - 1;
     }
 
+    if (a == 10) {
+        a = (10);
+    }
+
     return 0;
 }

@@ -42,9 +42,9 @@ exp        ::= "(" exp ")" exp2
              | "sizeof" "(" type ")" exp2
              | "(" type ")" exp exp2
 
-exp2       ::= (">" | "<" | ">=" | "<=" | "!=" | "==" | "+" | "-" | "/" | "*" | "%" | "||" | "&&") exp exp2
-             | "[" exp "]" exp2
-             | "." IDENT exp2
+exp2       ::= (">" | "<" | ">=" | "<=" | "!=" | "==" | "+" | "-" | "/" | "*" | "%" | "||" | "&&") exp
+             | "[" exp "]"
+             | "." IDENT
 
 funcall      ::= IDENT "(" [ exp ("," exp)* ] ")"
 arrayaccess  ::= exp "[" exp "]"                  # array access
