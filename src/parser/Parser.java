@@ -306,6 +306,7 @@ public class Parser {
                     }
                     break;
                 default:
+                    expect(TokenClass.INVALID);
                     break;
             }
             parseStatement();
@@ -359,6 +360,7 @@ public class Parser {
                     }
                     break;
                 default:
+                    expect(TokenClass.INVALID);
                     break;
             }
         } else {
@@ -440,6 +442,7 @@ public class Parser {
                     parseFieldAccess();
                     break;
                 default:
+                    expect(TokenClass.INVALID);
                     break;
             }
         }
