@@ -208,7 +208,23 @@ public class Parser {
             parseParamsList();
             expect(TokenClass.RPAR);
             parseBlock();
-            parseVarAndFunDecls();
+            parseFunDeclsOnly();
+        }
+    }
+
+    private void parseFunDeclsOnly() {
+        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT)) {
+            parseType();
+            expect(TokenClass.IDENTIFIER);
+            if (accept(TokenClass.LPAR)) {
+                nextToken();
+                parseParamsList();
+                expect(TokenClass.RPAR);
+                parseBlock();
+                parseFunDeclsOnly();
+            } else {
+                expect(TokenClass.LPAR);
+            }
         }
     }
 

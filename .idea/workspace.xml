@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Fixed #include to work as it was explained on piazza.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lexer/Tokeniser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexer/Tokeniser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/grammar/cfg.txt" beforeDir="false" afterPath="$PROJECT_DIR$/grammar/cfg.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fibonacci.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fibonacci.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/myTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/myTest.c" afterDir="false" />
@@ -446,7 +446,14 @@
       <option name="project" value="LOCAL" />
       <updated>1570390630509</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Character escaping fix (according to the specification). Parser fix">
+      <created>1570566290292</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1570566290292</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -475,6 +482,7 @@
     <MESSAGE value="Fixes: Struct declaration," />
     <MESSAGE value="Fixed struct declaration." />
     <MESSAGE value="Fixed multi line comment. (Now /*/ doesnt pass as a start and an end of a comment)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed multi line comment. (Now /*/ doesnt pass as a start and an end of a comment)" />
+    <MESSAGE value="Character escaping fix (according to the specification). Parser fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Character escaping fix (according to the specification). Parser fix" />
   </component>
 </project>
