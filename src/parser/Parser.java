@@ -1,10 +1,13 @@
 package parser;
 
+import ast.*;
+
 import lexer.Token;
 import lexer.Tokeniser;
 import lexer.Token.TokenClass;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 
@@ -26,11 +29,11 @@ public class Parser {
         this.tokeniser = tokeniser;
     }
 
-    public void parse() {
+    public Program parse() {
         // get the first token
         nextToken();
 
-        parseProgram();
+        return parseProgram();
     }
 
     public int getErrorCount() {
@@ -120,11 +123,19 @@ public class Parser {
     }
 
 
-    private void parseProgram() {
+    private Program parseProgram() {
         parseIncludes();
+
         parseStructDecls();
         parseVarAndFunDecls();
+
+        List<StructTypeDecl> stds = parseStructDecls();
+        List<VarDecl> vds = parseVarDecls();
+        List<FunDecl> fds = parseFunDecls();
+
+
         expect(TokenClass.EOF);
+        return new Program(stds, vds, fds);
     }
 
     // includes are ignored, so does not need to return an AST node
@@ -136,8 +147,9 @@ public class Parser {
         }
     }
 
-    private void parseStructDecls() {
+    private List<StructTypeDecl> parseStructDecls() {
         // to be completed ...
+
         if (accept(TokenClass.STRUCT)) {
             nextToken();
             expect(TokenClass.IDENTIFIER);
@@ -147,6 +159,7 @@ public class Parser {
             expect(TokenClass.SC);
             parseStructDecls();
         }
+        return null;
     }
 
     private void parseStructValDecls() {
@@ -170,8 +183,9 @@ public class Parser {
         }
     }
 
-    private void parseVarDecls() {
+    private List<VarDecl> parseVarDecls() {
         // to be completed ...
+
         if (accept(TokenClass.SC,TokenClass.LSBR)) {
             Token varDeclToken = expect(TokenClass.SC, TokenClass.LSBR);
             if (varDeclToken != null && varDeclToken.tokenClass.equals(TokenClass.LSBR)) {
@@ -181,6 +195,7 @@ public class Parser {
             }
             parseVarAndFunDecls();
         }
+        return null;
     }
 
     private void parseVarDeclsOnly() {
@@ -199,9 +214,10 @@ public class Parser {
                 expect(TokenClass.SC,TokenClass.LSBR);
             }
         }
+
     }
 
-    private void parseFunDecls() {
+    private List<FunDecl> parseFunDecls() {
         // to be completed ...
         if (accept(TokenClass.LPAR)) {
             nextToken();
@@ -210,6 +226,7 @@ public class Parser {
             parseBlock();
             parseFunDeclsOnly();
         }
+        return null;
     }
 
     private void parseFunDeclsOnly() {
@@ -228,18 +245,46 @@ public class Parser {
         }
     }
 
-    private void parseType() {
+    private Type parseType() {
+        Type type = null;
         if (accept(TokenClass.STRUCT))
-            parseStructType();
-        else
-            expect(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID);
-        if (accept(TokenClass.ASTERIX))
+            type = parseStructType();
+        else {
+                switch (token.tokenClass) {
+                    case INT:
+                        type = BaseType.INT;
+                        nextToken();
+                        break;
+                    case CHAR:
+                        type = BaseType.CHAR;
+                        nextToken();
+                        break;
+                    case VOID:
+                        type = BaseType.VOID;
+                        nextToken();
+                        break;
+                    default:
+                        expect(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID);
+                        break;
+                }
+            }
+
+        if (accept(TokenClass.ASTERIX)) {
             nextToken();
+            type = new PointerType(type);
+        }
+        return type;
     }
 
-    private void parseStructType() {
+    private Type parseStructType() {
+        Type type;
         expect(TokenClass.STRUCT);
+        if (accept(TokenClass.IDENTIFIER))
+            type = new StructType(token.data);
+        else
+            type = new StructType(null);
         expect(TokenClass.IDENTIFIER);
+        return type;
     }
 
     private void parseParamsList() {
@@ -257,6 +302,7 @@ public class Parser {
             expect(TokenClass.IDENTIFIER);
             parseParamsRepetitions();
         }
+
     }
 
     private void parseStatement() {
