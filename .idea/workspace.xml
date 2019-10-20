@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Fixed #include to work as it was explained on piazza.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fibonacci.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fibonacci.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/myTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/myTest.c" afterDir="false" />
     </list>
+=======
+>>>>>>> a946d269f5a4a74e8124de992ea0c9133fb548b5
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< HEAD
   <component name="FavoritesManager">
     <favorites_list name="Compiling Techniques" />
   </component>
@@ -21,10 +25,15 @@
       <map>
         <entry key="$PROJECT_DIR$" value="master" />
       </map>
+=======
+>>>>>>> a946d269f5a4a74e8124de992ea0c9133fb548b5
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+<<<<<<< HEAD
   <component name="ProjectId" id="1RhUQHfzR5wMhWPuf6aPNhu74rJ" />
+=======
+>>>>>>> a946d269f5a4a74e8124de992ea0c9133fb548b5
   <component name="PropertiesComponent">
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -36,17 +45,24 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="options.lastSelected" value="org.jetbrains.plugins.scala.compiler.ScalaCompileServerForm" />
     <property name="options.splitter.details.proportions" value="0.2" />
+<<<<<<< HEAD
     <property name="options.splitter.main.proportions" value="0.3" />
+=======
+>>>>>>> a946d269f5a4a74e8124de992ea0c9133fb548b5
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="util" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/grammar" />
+      <recent name="$PROJECT_DIR$/src/parser" />
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/desc" />
-      <recent name="$PROJECT_DIR$/grammar" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -61,7 +77,10 @@
       </list>
     </option>
   </component>
+<<<<<<< HEAD
   <component name="RunManager" selected="Application.myTest-parser">
+=======
+>>>>>>> a946d269f5a4a74e8124de992ea0c9133fb548b5
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -368,6 +387,7 @@
       <option name="project" value="LOCAL" />
       <updated>1538819644890</updated>
     </task>
+<<<<<<< HEAD
     <task id="LOCAL-00004" summary="Added warning about creating a branch if Part 1 deadline has not yet passed.">
       <created>1570125313213</created>
       <option name="number" value="00004" />
@@ -481,10 +501,13 @@
         </entry>
       </map>
     </option>
+=======
+>>>>>>> a946d269f5a4a74e8124de992ea0c9133fb548b5
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added description of Part 2" />
     <MESSAGE value="Added warning about creating a branch if Part 1 deadline has not yet passed." />
+<<<<<<< HEAD
     <MESSAGE value="Lexer is fully working now. Still not sure if the #include parsing is correct on piazza. Gcc compiler acts differently to what was said." />
     <MESSAGE value="Fixed #include to work as it was explained on piazza." />
     <MESSAGE value="Fixed the identifier definition" />
@@ -499,5 +522,7 @@
     <MESSAGE value="Minor fix" />
     <MESSAGE value="Missing break fix." />
     <option name="LAST_COMMIT_MESSAGE" value="Missing break fix." />
+=======
+>>>>>>> a946d269f5a4a74e8124de992ea0c9133fb548b5
   </component>
 </project>

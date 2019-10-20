@@ -1,10 +1,13 @@
 package parser;
 
+import ast.*;
+
 import lexer.Token;
 import lexer.Tokeniser;
 import lexer.Token.TokenClass;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 
@@ -26,11 +29,11 @@ public class Parser {
         this.tokeniser = tokeniser;
     }
 
-    public void parse() {
+    public Program parse() {
         // get the first token
         nextToken();
 
-        parseProgram();
+        return parseProgram();
     }
 
     public int getErrorCount() {
@@ -120,11 +123,15 @@ public class Parser {
     }
 
 
-    private void parseProgram() {
+    private Program parseProgram() {
         parseIncludes();
+<<<<<<< HEAD
         parseStructDecls();
         parseVarAndFunDecls();
+=======
+>>>>>>> a946d269f5a4a74e8124de992ea0c9133fb548b5
         expect(TokenClass.EOF);
+        return new Program(stds, vds, fds);
     }
 
     // includes are ignored, so does not need to return an AST node
@@ -136,8 +143,9 @@ public class Parser {
         }
     }
 
-    private void parseStructDecls() {
+    private List<StructTypeDecl> parseStructDecls() {
         // to be completed ...
+<<<<<<< HEAD
         if (accept(TokenClass.STRUCT)) {
             nextToken();
             expect(TokenClass.IDENTIFIER);
@@ -168,10 +176,13 @@ public class Parser {
                 expect(TokenClass.SC, TokenClass.LSBR, TokenClass.LPAR);
             }
         }
+=======
+>>>>>>> a946d269f5a4a74e8124de992ea0c9133fb548b5
     }
 
-    private void parseVarDecls() {
+    private List<VarDecl> parseVarDecls() {
         // to be completed ...
+<<<<<<< HEAD
         if (accept(TokenClass.SC,TokenClass.LSBR)) {
             Token varDeclToken = expect(TokenClass.SC, TokenClass.LSBR);
             if (varDeclToken != null && varDeclToken.tokenClass.equals(TokenClass.LSBR)) {
@@ -199,10 +210,13 @@ public class Parser {
                 expect(TokenClass.SC,TokenClass.LSBR);
             }
         }
+=======
+>>>>>>> a946d269f5a4a74e8124de992ea0c9133fb548b5
     }
 
-    private void parseFunDecls() {
+    private List<FunDecl> parseFunDecls() {
         // to be completed ...
+<<<<<<< HEAD
         if (accept(TokenClass.LPAR)) {
             nextToken();
             parseParamsList();
@@ -257,6 +271,8 @@ public class Parser {
             expect(TokenClass.IDENTIFIER);
             parseParamsRepetitions();
         }
+=======
+>>>>>>> a946d269f5a4a74e8124de992ea0c9133fb548b5
     }
 
     private void parseStatement() {
