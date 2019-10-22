@@ -1,38 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Fixed #include to work as it was explained on piazza.">
-      <change afterPath="$PROJECT_DIR$/src/ast/ArrayAccessExpr.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/ArrayType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/Assign.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/BinOp.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/ChrLiteral.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/ExprStmt.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/FieldAccessExpr.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/FunCallExpr.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/If.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/IntLiteral.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/Op.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/PointerType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/Return.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/SizeOfExpr.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/StrLiteral.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/StructType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/TypecastExpr.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/ValueAtExpr.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ast/While.java" afterDir="false" />
+    <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Part 2, parser is now rebuilt.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/Main$Mode.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/Main$Mode.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ast/ASTPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/ASTPrinter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/ASTVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/ASTVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/Block.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/StructTypeDecl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/StructTypeDecl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sem/NameAnalysisVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/NameAnalysisVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -96,7 +70,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Fibonacci-ast">
+  <component name="RunManager" selected="Application.myTest-ast">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -535,7 +509,21 @@
       <option name="project" value="LOCAL" />
       <updated>1570649445408</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Part 2 initial commit. Now I am rebuilding the parser.">
+      <created>1571594601443</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1571594601443</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Part 2, parser is now rebuilt.">
+      <created>1571777477892</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1571777477892</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -568,6 +556,8 @@
     <MESSAGE value="Minor fix" />
     <MESSAGE value="Missing break fix." />
     <MESSAGE value="I don't know why function_application_4 crashes." />
-    <option name="LAST_COMMIT_MESSAGE" value="I don't know why function_application_4 crashes." />
+    <MESSAGE value="Part 2 initial commit. Now I am rebuilding the parser." />
+    <MESSAGE value="Part 2, parser is now rebuilt." />
+    <option name="LAST_COMMIT_MESSAGE" value="Part 2, parser is now rebuilt." />
   </component>
 </project>

@@ -6,9 +6,12 @@ import lexer.Token;
 import lexer.Tokeniser;
 import lexer.Token.TokenClass;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -126,13 +129,9 @@ public class Parser {
     private Program parseProgram() {
         parseIncludes();
 
-        parseStructDecls();
-        parseVarAndFunDecls();
-
         List<StructTypeDecl> stds = parseStructDecls();
         List<VarDecl> vds = parseVarDecls();
         List<FunDecl> fds = parseFunDecls();
-
 
         expect(TokenClass.EOF);
         return new Program(stds, vds, fds);
@@ -148,101 +147,97 @@ public class Parser {
     }
 
     private List<StructTypeDecl> parseStructDecls() {
-        // to be completed ...
+        if (accept(TokenClass.STRUCT) && lookAhead(2).tokenClass.equals(TokenClass.LBRA)) {
+            List<StructTypeDecl> structTypeDecls = new ArrayList<>();
 
-        if (accept(TokenClass.STRUCT)) {
             nextToken();
+            String name = token.data;
             expect(TokenClass.IDENTIFIER);
             expect(TokenClass.LBRA);
-            parseStructValDecls();
+            List<VarDecl> structVarDecls = parseStructVarDecls();
             expect(TokenClass.RBRA);
             expect(TokenClass.SC);
-            parseStructDecls();
-        }
-        return null;
-    }
 
-    private void parseStructValDecls() {
-        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT))
-            parseVarDeclsOnly();
-        else
-            expect(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT);
-    }
-
-    private void parseVarAndFunDecls() {
-        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT)) {
-            parseType();
-            expect(TokenClass.IDENTIFIER);
-            if (accept(TokenClass.SC, TokenClass.LSBR)) {
-                parseVarDecls();
-            } else if (accept(TokenClass.LPAR)) {
-                parseFunDecls();
-            } else {
-                expect(TokenClass.SC, TokenClass.LSBR, TokenClass.LPAR);
+            structTypeDecls.add(new StructTypeDecl(new StructType(name), structVarDecls));
+            List<StructTypeDecl> parseStructDecls = parseStructDecls();
+            if (!parseStructDecls.isEmpty()) {
+                structTypeDecls = Stream.concat(structTypeDecls.stream(), parseStructDecls.stream()).collect(Collectors.toList());
             }
+            return structTypeDecls;
+        }
+        return new ArrayList<>();
+    }
+
+    private List<VarDecl> parseStructVarDecls() {
+        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT)) {
+            return parseVarDecls();
+        }
+        else {
+            expect(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT);
+            return null;
         }
     }
 
     private List<VarDecl> parseVarDecls() {
-        // to be completed ...
+        if ((accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID) && !lookAhead(2).tokenClass.equals(TokenClass.LPAR) ) || (accept(TokenClass.STRUCT) && !lookAhead(3).tokenClass.equals(TokenClass.LPAR))) {
+            List<VarDecl> varDecls = new ArrayList<>();
 
-        if (accept(TokenClass.SC,TokenClass.LSBR)) {
-            Token varDeclToken = expect(TokenClass.SC, TokenClass.LSBR);
-            if (varDeclToken != null && varDeclToken.tokenClass.equals(TokenClass.LSBR)) {
-                expect(TokenClass.INT_LITERAL);
-                expect(TokenClass.RSBR);
-                expect(TokenClass.SC);
-            }
-            parseVarAndFunDecls();
-        }
-        return null;
-    }
+            Type type = parseType();
+            String name = null;
+            Token identifier = expect(TokenClass.IDENTIFIER);
+            if (identifier != null)
+                name = identifier.data;
 
-    private void parseVarDeclsOnly() {
-        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT)) {
-            parseType();
-            expect(TokenClass.IDENTIFIER);
-            if (accept(TokenClass.SC,TokenClass.LSBR)) {
-                Token varDeclOnlyToken = expect(TokenClass.SC, TokenClass.LSBR);
-                if (varDeclOnlyToken != null && varDeclOnlyToken.tokenClass.equals(TokenClass.LSBR)) {
-                    expect(TokenClass.INT_LITERAL);
+            if (accept(TokenClass.SC, TokenClass.LSBR)) {
+                Token varDeclToken = expect(TokenClass.SC, TokenClass.LSBR);
+                if (varDeclToken != null && varDeclToken.tokenClass.equals(TokenClass.LSBR)) {
+                    Token arraySizeToken = expect(TokenClass.INT_LITERAL);
+                    if (arraySizeToken != null)
+                        type = new ArrayType(type, Integer.parseInt(arraySizeToken.data));
                     expect(TokenClass.RSBR);
                     expect(TokenClass.SC);
                 }
-                parseVarDeclsOnly();
-            } else {
-                expect(TokenClass.SC,TokenClass.LSBR);
-            }
-        }
 
+                VarDecl variable = new VarDecl(type, name);
+                varDecls.add(variable);
+                List<VarDecl> parseVarDecls = parseVarDecls();
+                if (parseVarDecls != null) {
+                    varDecls = Stream.concat(varDecls.stream(), parseVarDecls.stream()).collect(Collectors.toList());
+                }
+                return varDecls;
+            } else
+                expect(TokenClass.SC, TokenClass.LSBR);
+        }
+        return new ArrayList<>();
     }
 
     private List<FunDecl> parseFunDecls() {
-        // to be completed ...
-        if (accept(TokenClass.LPAR)) {
-            nextToken();
-            parseParamsList();
-            expect(TokenClass.RPAR);
-            parseBlock();
-            parseFunDeclsOnly();
-        }
-        return null;
-    }
+        if ((accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID) && lookAhead(2).tokenClass.equals(TokenClass.LPAR) ) || (accept(TokenClass.STRUCT) && lookAhead(3).tokenClass.equals(TokenClass.LPAR))) {
+            List<FunDecl> funDecls = new ArrayList<>();
 
-    private void parseFunDeclsOnly() {
-        if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT)) {
-            parseType();
-            expect(TokenClass.IDENTIFIER);
+            Type type = parseType();
+            String name = null;
+            Token identifier = expect(TokenClass.IDENTIFIER);
+            if (identifier != null)
+                name = identifier.data;
+
             if (accept(TokenClass.LPAR)) {
                 nextToken();
-                parseParamsList();
+                List<VarDecl> params = parseParamsList();
                 expect(TokenClass.RPAR);
-                parseBlock();
-                parseFunDeclsOnly();
-            } else {
+                Block block = parseBlock();
+
+                FunDecl function = new FunDecl(type, name, params, block);
+                funDecls.add(function);
+                List<FunDecl> parseFunDecls = parseFunDecls();
+                if (parseFunDecls != null) {
+                    funDecls = Stream.concat(funDecls.stream(), parseFunDecls.stream()).collect(Collectors.toList());
+                }
+                return funDecls;
+            } else
                 expect(TokenClass.LPAR);
-            }
         }
+        return new ArrayList<>();
     }
 
     private Type parseType() {
@@ -287,55 +282,93 @@ public class Parser {
         return type;
     }
 
-    private void parseParamsList() {
+    private List<VarDecl> parseParamsList() {
         if (!accept(TokenClass.RPAR)) {
-            parseType();
-            expect(TokenClass.IDENTIFIER);
-            parseParamsRepetitions();
+            List<VarDecl> params = new ArrayList<>();
+
+            Type type = parseType();
+            String name = null;
+            Token identifier = expect(TokenClass.IDENTIFIER);
+            if (identifier != null)
+                name = identifier.data;
+            VarDecl param = new VarDecl(type, name);
+
+            params.add(param);
+            List<VarDecl> paramsRepetitions = parseParamsRepetitions();
+            if (!paramsRepetitions.isEmpty()) {
+                params = Stream.concat(params.stream(), paramsRepetitions.stream()).collect(Collectors.toList());
+            }
+            return params;
         }
+        return new ArrayList<>();
     }
 
-    private void parseParamsRepetitions() {
+    private List<VarDecl> parseParamsRepetitions() {
         if (!accept(TokenClass.RPAR)) {
+            List<VarDecl> params = new ArrayList<>();
+
             expect(TokenClass.COMMA);
-            parseType();
-            expect(TokenClass.IDENTIFIER);
-            parseParamsRepetitions();
-        }
 
+            Type type = parseType();
+            String name = null;
+            Token identifier = expect(TokenClass.IDENTIFIER);
+            if (identifier != null)
+                name = identifier.data;
+            VarDecl param = new VarDecl(type, name);
+
+            params.add(param);
+            List<VarDecl> paramsRepetitions = parseParamsRepetitions();
+            if (!paramsRepetitions.isEmpty()) {
+                params = Stream.concat(params.stream(), paramsRepetitions.stream()).collect(Collectors.toList());
+            }
+            return params;
+        }
+        return new ArrayList<>();
     }
 
-    private void parseStatement() {
+    private List<Stmt> parseStatement() {
         if (accept(TokenClass.LBRA, TokenClass.WHILE, TokenClass.IF, TokenClass.RETURN, TokenClass.LPAR, TokenClass.MINUS, TokenClass.ASTERIX, TokenClass.SIZEOF, TokenClass.IDENTIFIER, TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL)) {
+            List<Stmt> statements = new ArrayList<>();
             switch (token.tokenClass) {
-                case LBRA:
-                    parseBlock();
+                case LBRA: {
+                    statements.add(parseBlock());
                     break;
-                case WHILE:
+                }
+                case WHILE: {
                     nextToken();
                     expect(TokenClass.LPAR);
-                    parseExpression();
+                    Expr expression = parseExpression();
                     expect(TokenClass.RPAR);
-                    parseStatementOnly();
+                    Stmt statement = parseStatementOnly();
+                    statements.add(new While(expression, statement));
                     break;
-                case IF:
+                }
+                case IF: {
                     nextToken();
                     expect(TokenClass.LPAR);
-                    parseExpression();
+                    Expr expression = parseExpression();
                     expect(TokenClass.RPAR);
-                    parseStatementOnly();
+                    Stmt ifStatement = parseStatementOnly();
+                    Stmt elseStatement;
                     if (accept(TokenClass.ELSE)) {
                         nextToken();
-                        parseStatementOnly();
-                    }
+                        elseStatement = parseStatementOnly();
+                    } else
+                        elseStatement = null;
+                    statements.add(new If(expression, ifStatement, elseStatement));
                     break;
-                case RETURN:
+                }
+                case RETURN: {
                     nextToken();
+                    Expr expression;
                     if (!accept(TokenClass.SC)) {
-                        parseExpression();
-                    }
+                        expression = parseExpression();
+                    } else
+                        expression = null;
                     expect(TokenClass.SC);
+                    statements.add(new Return(expression));
                     break;
+                }
                 case LPAR:
                 case MINUS:
                 case ASTERIX:
@@ -343,53 +376,70 @@ public class Parser {
                 case IDENTIFIER:
                 case INT_LITERAL:
                 case CHAR_LITERAL:
-                case STRING_LITERAL:
-                    parseExpression();
+                case STRING_LITERAL: {
+                    Expr expression = parseExpression();
                     Token statementToken = expect(TokenClass.ASSIGN, TokenClass.SC);
                     if (statementToken != null && statementToken.tokenClass.equals(TokenClass.ASSIGN)) {
-                        parseExpression();
+                        Expr assignExpression = parseExpression();
                         expect(TokenClass.SC);
+                        statements.add(new Assign(expression, assignExpression));
+                    } else {
+                        ExprStmt expressionStatement = new ExprStmt(expression);
+                        statements.add(expressionStatement);
                     }
                     break;
+                }
                 default:
                     expect(TokenClass.INVALID);
                     break;
             }
-            parseStatement();
+            List<Stmt> parseStatement = parseStatement();
+            if (!parseStatement.isEmpty()) {
+                statements = Stream.concat(statements.stream(), parseStatement.stream()).collect(Collectors.toList());
+            }
+            return statements;
         }
+        return new ArrayList<>();
     }
 
-    private void parseStatementOnly() {
+    private Stmt parseStatementOnly() {
         if (accept(TokenClass.LBRA, TokenClass.WHILE, TokenClass.IF, TokenClass.RETURN, TokenClass.LPAR, TokenClass.MINUS, TokenClass.ASTERIX, TokenClass.SIZEOF, TokenClass.IDENTIFIER, TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL)) {
             switch (token.tokenClass) {
-                case LBRA:
-                    parseBlock();
-                    break;
-                case WHILE:
+                case LBRA: {
+                    return parseBlock();
+                }
+                case WHILE: {
                     nextToken();
                     expect(TokenClass.LPAR);
-                    parseExpression();
+                    Expr expression = parseExpression();
                     expect(TokenClass.RPAR);
-                    parseStatementOnly();
-                    break;
-                case IF:
+                    Stmt statement = parseStatementOnly();
+                    return new While(expression, statement);
+                }
+                case IF: {
                     nextToken();
                     expect(TokenClass.LPAR);
-                    parseExpression();
+                    Expr expression = parseExpression();
                     expect(TokenClass.RPAR);
-                    parseStatementOnly();
+                    Stmt ifStatement = parseStatementOnly();
+                    Stmt elseStatement;
                     if (accept(TokenClass.ELSE)) {
                         nextToken();
-                        parseStatementOnly();
-                    }
-                    break;
-                case RETURN:
+                        elseStatement = parseStatementOnly();
+                    } else
+                        elseStatement = null;
+                    return new If(expression, ifStatement, elseStatement);
+                }
+                case RETURN: {
                     nextToken();
+                    Expr expression;
                     if (!accept(TokenClass.SC)) {
-                        parseExpression();
-                    }
+                        expression = parseExpression();
+                    } else
+                        expression = null;
                     expect(TokenClass.SC);
-                    break;
+                    return new Return(expression);
+                }
                 case LPAR:
                 case MINUS:
                 case ASTERIX:
@@ -397,14 +447,17 @@ public class Parser {
                 case IDENTIFIER:
                 case INT_LITERAL:
                 case CHAR_LITERAL:
-                case STRING_LITERAL:
-                    parseExpression();
+                case STRING_LITERAL: {
+                    Expr expression = parseExpression();
                     Token statementToken = expect(TokenClass.ASSIGN, TokenClass.SC);
                     if (statementToken != null && statementToken.tokenClass.equals(TokenClass.ASSIGN)) {
-                        parseExpression();
+                        Expr assignExpression = parseExpression();
                         expect(TokenClass.SC);
+                        return new Assign(expression, assignExpression);
+                    } else {
+                        return new ExprStmt(expression);
                     }
-                    break;
+                }
                 default:
                     expect(TokenClass.INVALID);
                     break;
@@ -412,139 +465,257 @@ public class Parser {
         } else {
             expect(TokenClass.LBRA, TokenClass.WHILE, TokenClass.IF, TokenClass.RETURN, TokenClass.LPAR, TokenClass.MINUS, TokenClass.ASTERIX, TokenClass.SIZEOF, TokenClass.IDENTIFIER, TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL);
         }
+        return null;
     }
 
-    private void parseBlock() {
+    private Block parseBlock() {
         expect(TokenClass.LBRA);
-        parseVarDeclsOnly();
-        parseStatement();
+        List<VarDecl> varDecls = parseVarDecls();
+        List<Stmt> statements = parseStatement();
         expect(TokenClass.RBRA);
+        return new Block(varDecls, statements);
     }
 
-    private void parseExpression() {
+    private Expr parseExpression() {
         if (accept(TokenClass.LPAR, TokenClass.MINUS, TokenClass.ASTERIX, TokenClass.SIZEOF, TokenClass.IDENTIFIER, TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL)) {
+            Expr inputExpression;
             switch (token.tokenClass) {
-                case LPAR:
+                case LPAR: {
                     Token expressionLPARToken = lookAhead(1);
                     if (expressionLPARToken != null && (expressionLPARToken.tokenClass.equals(TokenClass.INT) || expressionLPARToken.tokenClass.equals(TokenClass.CHAR) || expressionLPARToken.tokenClass.equals(TokenClass.VOID) || expressionLPARToken.tokenClass.equals(TokenClass.STRUCT)))
-                        parseTypeCast();
+                        inputExpression =  parseTypeCast();
                     else {
                         nextToken();
-                        parseExpression();
+                        Expr expression = parseExpression();
                         expect(TokenClass.RPAR);
+                        inputExpression = expression;
                     }
                     break;
-                case MINUS:
+                }
+                case MINUS: {
                     nextToken();
-                    parseExpression();
+                    inputExpression = parseExpression();
                     break;
-                case ASTERIX:
-                    parseValueAt();
+                }
+                case ASTERIX: {
+                    inputExpression = parseValueAt();
                     break;
-                case SIZEOF:
-                    parseSizeOf();
+                }
+                case SIZEOF: {
+                    inputExpression = parseSizeOf();
                     break;
-                case IDENTIFIER:
+                }
+                case IDENTIFIER: {
                     Token identifierToken = lookAhead(1);
                     if (identifierToken != null && identifierToken.tokenClass.equals(TokenClass.LPAR))
-                        parseFuncCall();
-                    else
+                        inputExpression = parseFuncCall();
+                    else {
+                        String name = token.data;
                         nextToken();
+                        inputExpression = new VarExpr(name);
+                    }
                     break;
+                }
+                case INT_LITERAL: {
+                    inputExpression = new IntLiteral(Integer.parseInt(token.data));
+                    expect(TokenClass.INT_LITERAL);
+                    break;
+                }
+                case CHAR_LITERAL: {
+                    inputExpression = new ChrLiteral(token.data.charAt(0));
+                    expect(TokenClass.CHAR_LITERAL);
+                    break;
+                }
+                case STRING_LITERAL: {
+                    inputExpression = new StrLiteral(token.data);
+                    expect(TokenClass.STRING_LITERAL);
+                    break;
+                }
                 default:
-                    expect(TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL);
-                    break;
+                    expect(TokenClass.INVALID);
+                    return null;
             }
-            parseExpressionWithoutLeftRecursion();
+            return parseExpressionWithoutLeftRecursion(inputExpression);
         } else {
             expect(TokenClass.LPAR, TokenClass.MINUS, TokenClass.ASTERIX, TokenClass.SIZEOF, TokenClass.IDENTIFIER, TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL);
         }
+        return null;
     }
 
-    private void parseExpressionWithoutLeftRecursion() {
+    private Expr parseExpressionWithoutLeftRecursion(Expr inputExpression) {
         if (accept(TokenClass.GT, TokenClass.LT, TokenClass.GE, TokenClass.LE, TokenClass.NE, TokenClass.EQ, TokenClass.PLUS, TokenClass.MINUS, TokenClass.DIV, TokenClass.ASTERIX, TokenClass.REM, TokenClass.OR, TokenClass.AND, TokenClass.LSBR, TokenClass.DOT)) {
             switch (token.tokenClass) {
-                case GT:
-                case LT:
-                case GE:
-                case LE:
-                case NE:
-                case EQ:
-                case PLUS:
-                case MINUS:
-                case DIV:
-                case ASTERIX:
-                case REM:
-                case OR:
-                case AND:
+                case GT: {
+                    Op op = Op.GT;
                     nextToken();
-                    parseExpression();
-                    parseExpressionWithoutLeftRecursion();
-                    break;
-                case LSBR:
-                    parseArrayAccess();
-                    break;
-                case DOT:
-                    parseFieldAccess();
-                    break;
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case LT: {
+                    Op op = Op.LT;
+                    nextToken();
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case GE: {
+                    Op op = Op.GE;
+                    nextToken();
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case LE: {
+                    Op op = Op.LE;
+                    nextToken();
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case NE: {
+                    Op op = Op.NE;
+                    nextToken();
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case EQ: {
+                    Op op = Op.EQ;
+                    nextToken();
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case PLUS: {
+                    Op op = Op.ADD;
+                    nextToken();
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case MINUS: {
+                    Op op = Op.SUB;
+                    nextToken();
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case DIV: {
+                    Op op = Op.DIV;
+                    nextToken();
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case ASTERIX: {
+                    Op op = Op.MUL;
+                    nextToken();
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case REM: {
+                    Op op = Op.MOD;
+                    nextToken();
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case OR: {
+                    Op op = Op.OR;
+                    nextToken();
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case AND: {
+                    Op op = Op.AND;
+                    nextToken();
+                    Expr rhs = parseExpression();
+                    return new BinOp(inputExpression, op, rhs);
+                }
+                case LSBR: {
+                    return parseArrayAccess(inputExpression);
+                }
+                case DOT: {
+                    return parseFieldAccess(inputExpression);
+                }
                 default:
                     expect(TokenClass.INVALID);
-                    break;
+                    return inputExpression;
             }
         }
+        return inputExpression;
     }
 
-    private void parseFuncCall() {
-        expect(TokenClass.IDENTIFIER);
+    private FunCallExpr parseFuncCall() {
+        String name = null;
+        Token function = expect(TokenClass.IDENTIFIER);
+        if (function != null)
+            name = function.data;
         expect(TokenClass.LPAR);
-        parseFuncCallParamsList();
+        List<Expr> params = parseFuncCallParamsList();
         expect(TokenClass.RPAR);
+        return new FunCallExpr(name, params);
     }
 
-    private void parseFuncCallParamsList() {
+    private List<Expr> parseFuncCallParamsList() {
         if (!accept(TokenClass.RPAR)) {
-            parseExpression();
-            parseFuncCallParamsRepetitions();
+            List<Expr> params = new ArrayList<>();
+
+            Expr expression = parseExpression();
+
+            params.add(expression);
+            List<Expr> paramsRepetitions = parseFuncCallParamsRepetitions();
+            if (!paramsRepetitions.isEmpty()) {
+                params = Stream.concat(params.stream(), paramsRepetitions.stream()).collect(Collectors.toList());
+            }
+            return params;
         }
+        return new ArrayList<>();
     }
 
-    private void parseFuncCallParamsRepetitions() {
+    private List<Expr> parseFuncCallParamsRepetitions() {
         if (!accept(TokenClass.RPAR)) {
+            List<Expr> params = new ArrayList<>();
             expect(TokenClass.COMMA);
-            parseExpression();
-            parseFuncCallParamsRepetitions();
+
+            Expr expression = parseExpression();
+
+            params.add(expression);
+            List<Expr> paramsRepetitions = parseFuncCallParamsRepetitions();
+            if (!paramsRepetitions.isEmpty()) {
+                params = Stream.concat(params.stream(), paramsRepetitions.stream()).collect(Collectors.toList());
+            }
+            return params;
         }
+        return new ArrayList<>();
     }
 
-    private void parseArrayAccess() {
+    private ArrayAccessExpr parseArrayAccess(Expr inputExpression) {
         expect(TokenClass.LSBR);
-        parseExpression();
+        Expr index = parseExpression();
         expect(TokenClass.RSBR);
-        parseExpressionWithoutLeftRecursion();
+        return new ArrayAccessExpr(inputExpression, index);
     }
 
-    private void parseFieldAccess() {
+    private FieldAccessExpr parseFieldAccess(Expr inputExpression) {
+        String fieldName = null;
         expect(TokenClass.DOT);
-        expect(TokenClass.IDENTIFIER);
-        parseExpressionWithoutLeftRecursion();
+        Token field = expect(TokenClass.IDENTIFIER);
+        if (field != null)
+            fieldName = field.data;
+        return new FieldAccessExpr(inputExpression, fieldName);
     }
 
-    private void parseValueAt() {
+    private ValueAtExpr parseValueAt() {
         expect(TokenClass.ASTERIX);
-        parseExpression();
+        Expr expression = parseExpression();
+        return new ValueAtExpr(expression);
     }
 
-    private void parseSizeOf() {
+    private SizeOfExpr parseSizeOf() {
         expect(TokenClass.SIZEOF);
         expect(TokenClass.LPAR);
-        parseType();
+        Type type = parseType();
         expect(TokenClass.RPAR);
+        return new SizeOfExpr(type);
     }
 
-    private void parseTypeCast() {
+    private TypecastExpr parseTypeCast() {
         expect(TokenClass.LPAR);
-        parseType();
+        Type type = parseType();
         expect(TokenClass.RPAR);
-        parseExpression();
+        Expr expression = parseExpression();
+        return new TypecastExpr(type, expression);
     }
 }
