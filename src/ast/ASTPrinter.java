@@ -182,9 +182,7 @@ public class ASTPrinter implements ASTVisitor<Void> {
 
     @Override
     public Void visitOp(Op o) {
-        writer.print("Op(");
         writer.print(o);
-        writer.print(")");
         return null;
     }
 
