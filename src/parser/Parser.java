@@ -6,7 +6,6 @@ import lexer.Token;
 import lexer.Tokeniser;
 import lexer.Token.TokenClass;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -149,18 +148,27 @@ public class Parser {
 
     private List<StructTypeDecl> parseStructDecls() {
         if (accept(TokenClass.STRUCT) && lookAhead(2).tokenClass.equals(TokenClass.LBRA)) {
+            List<StructTypeDecl> structTypeDecls = new ArrayList<>();
+
             nextToken();
+            String name = token.data;
             expect(TokenClass.IDENTIFIER);
             expect(TokenClass.LBRA);
-            parseStructValDecls();
+            List<VarDecl> structVarDecls = parseStructVarDecls();
             expect(TokenClass.RBRA);
             expect(TokenClass.SC);
-            parseStructDecls();
+
+            structTypeDecls.add(new StructTypeDecl(new StructType(name), structVarDecls));
+            List<StructTypeDecl> parseStructDecls = parseStructDecls();
+            if (!parseStructDecls.isEmpty()) {
+                structTypeDecls = Stream.concat(structTypeDecls.stream(), parseStructDecls.stream()).collect(Collectors.toList());
+            }
+            return structTypeDecls;
         }
         return new ArrayList<>();
     }
 
-    private List<VarDecl> parseStructValDecls() {
+    private List<VarDecl> parseStructVarDecls() {
         if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT)) {
             return parseVarDecls();
         }
@@ -470,7 +478,7 @@ public class Parser {
 
     private Expr parseExpression() {
         if (accept(TokenClass.LPAR, TokenClass.MINUS, TokenClass.ASTERIX, TokenClass.SIZEOF, TokenClass.IDENTIFIER, TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL)) {
-            Expr inputExpression = null;
+            Expr inputExpression;
             switch (token.tokenClass) {
                 case LPAR: {
                     Token expressionLPARToken = lookAhead(1);

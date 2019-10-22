@@ -172,7 +172,9 @@ public class ASTPrinter implements ASTVisitor<Void> {
     public Void visitBinOp(BinOp bo) {
         writer.print("BinOp(");
         bo.lhs.accept(this);
+        writer.print(",");
         bo.op.accept(this);
+        writer.print(",");
         bo.rhs.accept(this);
         writer.print(")");
         return null;
