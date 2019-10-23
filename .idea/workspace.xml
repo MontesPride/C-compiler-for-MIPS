@@ -9,7 +9,6 @@
       <change beforePath="$PROJECT_DIR$/src/sem/Scope.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/Scope.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/myEdgeTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/myEdgeTest.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/myTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/myTest.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -628,7 +627,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571838849022</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Function declartion name analysis is now implemented. Working on field access right now.">
+      <created>1571846402163</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1571846402163</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -667,7 +673,8 @@
     <MESSAGE value="Precedence rules and left recursion removal has been applied." />
     <MESSAGE value="Missing break statement fix." />
     <MESSAGE value="Name analysis, initial commit." />
-    <option name="LAST_COMMIT_MESSAGE" value="Name analysis, initial commit." />
+    <MESSAGE value="Function declartion name analysis is now implemented. Working on field access right now." />
+    <option name="LAST_COMMIT_MESSAGE" value="Function declartion name analysis is now implemented. Working on field access right now." />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

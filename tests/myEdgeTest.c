@@ -9,15 +9,24 @@
  *
  */
 
+ struct strukt {
+    int var;
+ };
+
 int main(int i) {
 
     int dupa;
     int a;
-    int i;
+    struct strukt b;
+    struct kupa assss;
+    void zs;
+    a = 9 % - 5 * 8;
     a = -x;
+    a = --x;
     x = 0;
 
     a = b.d;
+    a = b.vars;
 
     dupa = 2+3*4;
     dupa = 2*3+4;
@@ -29,4 +38,5 @@ int main(int i) {
     if(a || c <= 4 && b) {
         a = 0;
     }
+    asdf();
 }

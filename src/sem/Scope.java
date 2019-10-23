@@ -32,5 +32,4 @@ public class Scope {
     public void put(Symbol sym) {
         symbolTable.put(sym.name, sym);
     }
-    public void remove(Symbol sym) { symbolTable.remove(sym.name, sym); }
 }
