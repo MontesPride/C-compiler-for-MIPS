@@ -52,6 +52,7 @@ int main() {
     struct vector v2;
     struct vector v;
     int iterator;
+    int dupa;
     v1.name = "vector1";
     v1.x = 1;
     v1.y = -1;
@@ -59,6 +60,8 @@ int main() {
     v2.name = "vector2";
     v2.x = 0;
     v2.y = -9999;
+
+    dupa = 2+3*4;
 
     v = add(v1.x, v2.x, v1.y, v2.y);
 
