@@ -570,6 +570,7 @@ public class Parser {
                 }
                 case MINUS: {
                     op = Op.SUB;
+                    break;
                 }
                 default:
                     op = null;
