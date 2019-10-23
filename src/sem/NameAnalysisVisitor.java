@@ -2,8 +2,7 @@ package sem;
 
 import ast.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
@@ -13,11 +12,35 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
     public NameAnalysisVisitor() {
         this.scope = new Scope();
         this.funDeclHelper = new HashMap<>();
+
+        addPredefinedFunctions();
     }
 
-    public NameAnalysisVisitor(Scope scope) {
-        this.scope = scope;
-        this.funDeclHelper = new HashMap<>();
+    private void addPredefinedFunctions() {
+        List<VarDecl> params;
+
+        params = new ArrayList<>();
+        params.add(new VarDecl(new PointerType(BaseType.CHAR), "s"));
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_s", params, new Block(new ArrayList<>(), new ArrayList<>()))));
+
+        params = new ArrayList<>();
+        params.add(new VarDecl(BaseType.INT, "i"));
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_i", params, new Block(new ArrayList<>(), new ArrayList<>()))));
+
+        params = new ArrayList<>();
+        params.add(new VarDecl(BaseType.CHAR, "c"));
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_c", params, new Block(new ArrayList<>(), new ArrayList<>()))));
+
+        params = new ArrayList<>();
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "read_c", params, new Block(new ArrayList<>(), new ArrayList<>()))));
+
+        params = new ArrayList<>();
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "read_i", params, new Block(new ArrayList<>(), new ArrayList<>()))));
+
+        params = new ArrayList<>();
+        params.add(new VarDecl(BaseType.INT, "size"));
+        scope.put(new FuncSymbol(new FunDecl(new PointerType(BaseType.VOID), "mcmalloc", params, new Block(new ArrayList<>(), new ArrayList<>()))));
+
     }
 
     @Override
@@ -82,8 +105,10 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
         Symbol s = scope.lookupCurrent(fd.name);
         if (s != null)
             error("Function " + fd.name + " already declared");
-        else
+        else if (checkIfTypeDeclared(fd.type))
             scope.put(new FuncSymbol(fd));
+        else
+            error("Function " + fd.name + " has incorrect return type " + fd.type);
 
         funDeclHelper = new HashMap<>();
         for (VarDecl vd : fd.params)
@@ -113,8 +138,10 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
             s = scope.lookupCurrent(vd.varName);
         if (s != null)
             error("Variable " + vd.varName + " already declared!");
-        else
+        else if (checkIfTypeDeclared(vd.type) && !vd.type.equals(BaseType.VOID))
             scope.put(new VarSymbol(vd));
+        else
+            error("Variable " + vd.varName + " has incorrect type " + vd.type);
         return null;
     }
 
@@ -157,17 +184,81 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     @Override
     public Void visitPointerType(PointerType pt) {
+        // To be completed...
         return null;
     }
 
     @Override
     public Void visitArrayType(ArrayType at) {
-
+        // To be completed...
         return null;
     }
 
     public void visitExpression(Expr expression) {
+        switch (expression.getClass().getSimpleName()) {
+            case "IntLiteral": {
+                visitIntLiteral((IntLiteral) expression);
+                break;
+            }
+            case "StrLiteral": {
+                visitStrLiteral((StrLiteral) expression);
+                break;
+            }
+            case "ChrLiteral": {
+                visitChrLiteral((ChrLiteral) expression);
+                break;
+            }
+            case "VarExpr": {
+                visitVarExpr((VarExpr) expression);
+                break;
+            }
+            case "FunCallExpr": {
+                visitFunCallExpr((FunCallExpr) expression);
+                break;
+            }
+            case "BinOp": {
+                visitBinOp((BinOp) expression);
+                break;
+            }
+            case "ArrayAccessExpr": {
+                visitArrayAccessExpr((ArrayAccessExpr) expression);
+                break;
+            }
+            case "FieldAccessExpr": {
+                visitFieldAccessExpr((FieldAccessExpr) expression);
+                break;
+            }
+            case "ValueAtExpr": {
+                visitValueAtExpr((ValueAtExpr) expression);
+                break;
+            }
+            case "SizeOfExpr": {
+                visitSizeOfExpr((SizeOfExpr) expression);
+                break;
+            }
+            case "TypecastExpr": {
+                visitTypecastExpr((TypecastExpr) expression);
+                break;
+            }
+        }
+    }
 
+    public boolean checkIfTypeDeclared(Type type) {
+        if (type.equals(BaseType.INT) || type.equals(BaseType.CHAR) || type.equals(BaseType.VOID))
+            return true;
+        if (type.getClass().equals(ArrayType.class)) {
+            ArrayType arrayType = (ArrayType) type;
+            return checkIfTypeDeclared(arrayType.type);
+        }
+        if (type.getClass().equals(PointerType.class)) {
+            PointerType pointerType = (PointerType) type;
+            return checkIfTypeDeclared(pointerType.type);
+        }
+        if (type.getClass().equals(StructType.class)) {
+            StructType structType = (StructType) type;
+            return scope.lookup(structType.name) != null;
+        }
+        return true;
     }
 
     @Override
@@ -190,6 +281,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     @Override
     public Void visitBinOp(BinOp bo) {
+        // To be completed...
         return null;
     }
 
@@ -201,48 +293,55 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     @Override
     public Void visitArrayAccessExpr(ArrayAccessExpr aa) {
+        visitExpression(aa.name);
         return null;
     }
 
     @Override
     public Void visitFieldAccessExpr(FieldAccessExpr fa) {
         if (fa.name.getClass().equals(VarExpr.class)) {
-            visitVarExpr((VarExpr)(fa.name));
-            VarExpr ve = (VarExpr)(fa.name);
-            if (ve.vd.type != null && ve.vd.type.getClass().equals(StructType.class)) {
-                StructTypeSymbol s = (StructTypeSymbol)scope.lookup(ve.name);
-                for (VarDecl vd : s.std.variables) {
-                    if (vd.varName.equals(fa.field))
-                        return null;
-
+            visitVarExpr((VarExpr) (fa.name));
+            VarExpr ve = (VarExpr) (fa.name);
+            if (ve.vd != null && ve.vd.type.getClass().equals(StructType.class)) {
+                VarSymbol var = (VarSymbol) scope.lookup(ve.name);
+                String structName = ((StructType) (var.vd.type)).name;
+                if (scope.lookup(structName) != null && scope.lookup(structName).isStruct()) {
+                    StructTypeSymbol structSymbol = (StructTypeSymbol) (scope.lookup(structName));
+                    for (VarDecl vd : structSymbol.std.variables) {
+                        if (vd.varName.equals(fa.field))
+                            return null;
+                    }
                 }
             }
-            error("Field access not allowed for " + ve.name);
+            error("Field access " + fa.field + " not allowed for variable " + ve.name);
         }
         return null;
     }
 
     @Override
     public Void visitValueAtExpr(ValueAtExpr va) {
-        // To be completed...
+        visitExpression(va.expression);
         return null;
     }
 
     @Override
     public Void visitSizeOfExpr(SizeOfExpr so) {
-        // To be completed...
+        if (!checkIfTypeDeclared(so.type))
+            error("SizeOfExpr of type that has not been declared");
         return null;
     }
 
     @Override
     public Void visitTypecastExpr(TypecastExpr tc) {
-        // To be completed...
+        visitExpression(tc.expression);
+        if (!checkIfTypeDeclared(tc.type))
+            error("TypecastExpr of type that has not been declared");
         return null;
     }
 
     @Override
     public Void visitExprStmt(ExprStmt es) {
-        // To be completed...
+        visitExpression(es.expression);
         return null;
     }
 
@@ -264,18 +363,16 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     @Override
     public Void visitAssign(Assign a) {
-        // To be completed...
+        visitExpression(a.lhs);
+        visitExpression(a.rhs);
         return null;
     }
 
     @Override
     public Void visitReturn(Return r) {
-        // To be completed...
+        if (r.expression != null)
+            visitExpression(r.expression);
         return null;
     }
-
-
-    // To be completed...
-
 
 }

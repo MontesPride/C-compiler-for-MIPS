@@ -96,8 +96,42 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 
 	@Override
 	public Type visitBinOp(BinOp bo) {
-		// To be completed...
-		return null;
+		Type lhsT = bo.lhs.accept(this);
+		Type rhsT = bo.rhs.accept(this);
+		switch (bo.op) {
+			case ADD:
+			case SUB:
+			case MUL:
+			case DIV:
+			case MOD:
+			case OR:
+			case AND:
+			case GT:
+			case LT:
+			case GE:
+			case LE: {
+				if (lhsT.equals(BaseType.INT) && rhsT.equals(BaseType.INT)) {
+					bo.type = BaseType.INT;
+					return BaseType.INT;
+				} else {
+					error("INVALID TYPES FOR THIS OPERATION(" + bo.op.toString() + "): lhsT = " + lhsT.toString() + ", rhsT = " + rhsT.toString());
+					return null;
+				}
+			}
+			case EQ:
+			case NE: {
+				if (lhsT.getClass().equals(StructType.class) || lhsT.getClass().equals(ArrayType.class) || lhsT.equals(BaseType.VOID) || rhsT.getClass().equals(StructType.class) || rhsT.getClass().equals(ArrayType.class) || rhsT.equals(BaseType.VOID)) {
+					error("INVALID TYPES FOR THIS OPERATION(" + bo.op.toString() + "): lhsT = " + lhsT.toString() + ", rhsT = " + rhsT.toString());
+					return null;
+				} else if (!lhsT.equals(rhsT)) {
+					error("TYPES DO NOT MATCH (" + bo.op.toString() + "): lhsT = " + lhsT.toString() + ", rhsT = " + rhsT.toString());
+				} else {
+					bo.type = lhsT;
+				}
+			}
+			default:
+				return null;
+		}
 	}
 
 	@Override
