@@ -6,8 +6,6 @@
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/myEdgeTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/myEdgeTest.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/myTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/myTest.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -565,7 +563,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571779381481</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Precedence rules and left recursion removal has been applied.">
+      <created>1571824635193</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1571824635193</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -601,6 +606,7 @@
     <MESSAGE value="Part 2 initial commit. Now I am rebuilding the parser." />
     <MESSAGE value="Part 2, parser is now rebuilt." />
     <MESSAGE value="Printing fix." />
-    <option name="LAST_COMMIT_MESSAGE" value="Printing fix." />
+    <MESSAGE value="Precedence rules and left recursion removal has been applied." />
+    <option name="LAST_COMMIT_MESSAGE" value="Precedence rules and left recursion removal has been applied." />
   </component>
 </project>
