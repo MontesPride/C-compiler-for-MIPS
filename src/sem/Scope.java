@@ -9,7 +9,7 @@ public class Scope {
 
     public Scope(Scope outer) {
         this.outer = outer;
-        this.symbolTable = outer.symbolTable;
+        this.symbolTable = new HashMap<>();
     }
 
     public Scope() {
@@ -32,4 +32,5 @@ public class Scope {
     public void put(Symbol sym) {
         symbolTable.put(sym.name, sym);
     }
+    public void remove(Symbol sym) { symbolTable.remove(sym.name, sym); }
 }

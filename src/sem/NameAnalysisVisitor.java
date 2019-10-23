@@ -2,16 +2,22 @@ package sem;
 
 import ast.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     public Scope scope;
+    public Map<String, Symbol> funDeclHelper;
 
     public NameAnalysisVisitor() {
         this.scope = new Scope();
+        this.funDeclHelper = new HashMap<>();
     }
 
     public NameAnalysisVisitor(Scope scope) {
         this.scope = scope;
+        this.funDeclHelper = new HashMap<>();
     }
 
     @Override
@@ -24,9 +30,9 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
     public Void visitStructTypeDecl(StructTypeDecl sts) {
         Symbol s = scope.lookupCurrent(sts.structType.name);
         if (s != null)
-        	error("StructType" + sts.structType.name + "already declared");
+            error("StructType" + sts.structType.name + "already declared");
         else
-        	scope.put(new StructTypeSymbol(sts));
+            scope.put(new StructTypeSymbol(sts));
         return null;
     }
 
@@ -79,9 +85,11 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
         else
             scope.put(new FuncSymbol(fd));
 
+        funDeclHelper = new HashMap<>();
         for (VarDecl vd : fd.params)
-            visitVarDecl(vd);
+            funDeclHelper.put(vd.varName, new VarSymbol(vd));
         visitBlock(fd.block);
+        funDeclHelper.clear();
 
         return null;
     }
@@ -100,7 +108,9 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     @Override
     public Void visitVarDecl(VarDecl vd) {
-        Symbol s = scope.lookupCurrent(vd.varName);
+        Symbol s = funDeclHelper.get(vd.varName);
+        if (s == null)
+            s = scope.lookupCurrent(vd.varName);
         if (s != null)
             error("Variable " + vd.varName + " already declared!");
         else
@@ -110,12 +120,16 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     @Override
     public Void visitVarExpr(VarExpr v) {
-        Symbol s = scope.lookup(v.name);
+        Symbol s = funDeclHelper.get(v.name);
+        if (s == null)
+            s = scope.lookup(v.name);
         if (s == null) {
-			error("Variable " + v.name + " not declared!");
-		} else if (!s.isVar()) {
-        	error(v.name + "is not declared as a variable");
-		}
+            error("Variable " + v.name + " not declared!");
+        } else if (!s.isVar()) {
+            error(v.name + "is not declared as a variable");
+        } else {
+            v.vd = ((VarSymbol) s).vd;
+        }
         return null;
     }
 
@@ -123,10 +137,10 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
     public Void visitFunCallExpr(FunCallExpr fc) {
         Symbol s = scope.lookup(fc.name);
         if (s == null) {
-			error("Function " + fc.name + " not declared!");
-		} else if (!s.isFunc()) {
-        	error(fc.name + "is not declared as a function");
-		}
+            error("Function " + fc.name + " not declared!");
+        } else if (!s.isFunc()) {
+            error(fc.name + "is not declared as a function");
+        }
         return null;
     }
 
@@ -134,10 +148,10 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
     public Void visitStructType(StructType st) {
         Symbol s = scope.lookup(st.name);
         if (s == null) {
-			error("StructType " + st.name + " not declared!");
+            error("StructType " + st.name + " not declared!");
         } else if (!s.isStruct()) {
-			error(st.name + "is not declared as a StructType");
-		}
+            error(st.name + "is not declared as a StructType");
+        }
         return null;
     }
 
@@ -176,8 +190,6 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     @Override
     public Void visitBinOp(BinOp bo) {
-        visitExpression(bo.lhs);
-        visitExpression(bo.rhs);
         return null;
     }
 
@@ -189,14 +201,24 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     @Override
     public Void visitArrayAccessExpr(ArrayAccessExpr aa) {
-        visitExpression(aa.name);
-        visitExpression(aa.index);
         return null;
     }
 
     @Override
     public Void visitFieldAccessExpr(FieldAccessExpr fa) {
-        visitExpression(fa.name);
+        if (fa.name.getClass().equals(VarExpr.class)) {
+            visitVarExpr((VarExpr)(fa.name));
+            VarExpr ve = (VarExpr)(fa.name);
+            if (ve.vd.type != null && ve.vd.type.getClass().equals(StructType.class)) {
+                StructTypeSymbol s = (StructTypeSymbol)scope.lookup(ve.name);
+                for (VarDecl vd : s.std.variables) {
+                    if (vd.varName.equals(fa.field))
+                        return null;
+
+                }
+            }
+            error("Field access not allowed for " + ve.name);
+        }
         return null;
     }
 

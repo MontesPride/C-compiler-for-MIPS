@@ -2,17 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Name analysis, initial commit.">
-      <change afterPath="$PROJECT_DIR$/src/sem/FuncSymbol.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sem/StructTypeSymbol.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sem/VarSymbol.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sem/NameAnalysisVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/NameAnalysisVisitor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sem/Scope.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/Scope.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sem/SemanticAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/SemanticAnalyzer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sem/Symbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/Symbol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/myEdgeTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/myEdgeTest.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/myTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/myTest.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -624,7 +621,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571824840150</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Name analysis, initial commit.">
+      <created>1571838849022</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1571838849022</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -662,6 +666,14 @@
     <MESSAGE value="Printing fix." />
     <MESSAGE value="Precedence rules and left recursion removal has been applied." />
     <MESSAGE value="Missing break statement fix." />
-    <option name="LAST_COMMIT_MESSAGE" value="Missing break statement fix." />
+    <MESSAGE value="Name analysis, initial commit." />
+    <option name="LAST_COMMIT_MESSAGE" value="Name analysis, initial commit." />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="vd" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
