@@ -31,7 +31,12 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 
 	@Override
 	public Type visitProgram(Program p) {
-		// To be completed...
+		for (StructTypeDecl std : p.structTypeDecls)
+			visitStructTypeDecl(std);
+		for (VarDecl vd : p.varDecls)
+			visitVarDecl(vd);
+		for (FunDecl fd : p.funDecls)
+			visitFunDecl(fd);
 		return null;
 	}
 
