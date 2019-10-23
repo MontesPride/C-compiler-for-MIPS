@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Part 2, parser is now rebuilt.">
+    <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Name analysis, initial commit.">
+      <change afterPath="$PROJECT_DIR$/src/sem/FuncSymbol.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sem/StructTypeSymbol.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sem/VarSymbol.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sem/NameAnalysisVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/NameAnalysisVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sem/Scope.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/Scope.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sem/SemanticAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/SemanticAnalyzer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sem/Symbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/Symbol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/myEdgeTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/myEdgeTest.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,6 +41,10 @@
   </component>
   <component name="ProjectId" id="1RhUQHfzR5wMhWPuf6aPNhu74rJ" />
   <component name="PropertiesComponent">
+    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
+    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
+    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
+    <property name="GenerateAntBuildDialog.outputFileNameProperty" value="compiling_techniques" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="GoToFile.includeJavaFiles" value="false" />
@@ -69,7 +80,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.myEdgeTest-ast">
+  <component name="RunManager" selected="Application.myTest-sem">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -234,6 +245,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Fibonacci-sem" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-sem tests/fibonacci.c dummy.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Tictactoe-ast" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="ct-19-20" />
@@ -254,6 +273,14 @@
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="ct-19-20" />
       <option name="PROGRAM_PARAMETERS" value="-parser tests/tictactoe.c dummy.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Tictactoe-sem" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-sem tests/tictactoe.c dummy.out" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -288,6 +315,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="myEdgeTest-sem" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-sem tests/myEdgeTest.c dummy.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="myTest-ast" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="ct-19-20" />
@@ -308,6 +343,14 @@
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="ct-19-20" />
       <option name="PROGRAM_PARAMETERS" value="-parser tests/myTest.c dummy.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="myTest-sem" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-sem tests/myTest.c dummy.out" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -377,6 +420,10 @@
       <item itemvalue="Application.Fibonacci-parser" />
       <item itemvalue="Application.Fibonacci-lexer" />
       <item itemvalue="Application.Fibonacci-ast" />
+      <item itemvalue="Application.Fibonacci-sem" />
+      <item itemvalue="Application.Tictactoe-sem" />
+      <item itemvalue="Application.myTest-sem" />
+      <item itemvalue="Application.myEdgeTest-sem" />
       <item itemvalue="Application.Tictactoe-parser" />
       <item itemvalue="Application.myTest-parser" />
       <item itemvalue="Application.myTest-lexer" />
@@ -570,7 +617,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571824635193</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Missing break statement fix.">
+      <created>1571824840150</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1571824840150</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -607,6 +661,7 @@
     <MESSAGE value="Part 2, parser is now rebuilt." />
     <MESSAGE value="Printing fix." />
     <MESSAGE value="Precedence rules and left recursion removal has been applied." />
-    <option name="LAST_COMMIT_MESSAGE" value="Precedence rules and left recursion removal has been applied." />
+    <MESSAGE value="Missing break statement fix." />
+    <option name="LAST_COMMIT_MESSAGE" value="Missing break statement fix." />
   </component>
 </project>

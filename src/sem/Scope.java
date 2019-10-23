@@ -1,28 +1,35 @@
 package sem;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Scope {
-	private Scope outer;
-	private Map<String, Symbol> symbolTable;
-	
-	public Scope(Scope outer) { 
-		this.outer = outer; 
-	}
-	
-	public Scope() { this(null); }
-	
-	public Symbol lookup(String name) {
-		// To be completed...
-		return null;
-	}
-	
-	public Symbol lookupCurrent(String name) {
-		// To be completed...
-		return null;
-	}
-	
-	public void put(Symbol sym) {
-		symbolTable.put(sym.name, sym);
-	}
+    private Scope outer;
+    private Map<String, Symbol> symbolTable;
+
+    public Scope(Scope outer) {
+        this.outer = outer;
+        this.symbolTable = outer.symbolTable;
+    }
+
+    public Scope() {
+        this.outer = null;
+        this.symbolTable = new HashMap<>();
+    }
+
+    public Symbol lookup(String name) {
+        if (symbolTable.get(name) != null)
+            return symbolTable.get(name);
+        if (outer != null)
+            return outer.lookup(name);
+        return null;
+    }
+
+    public Symbol lookupCurrent(String name) {
+        return symbolTable.get(name);
+    }
+
+    public void put(Symbol sym) {
+        symbolTable.put(sym.name, sym);
+    }
 }

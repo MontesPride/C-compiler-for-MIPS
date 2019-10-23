@@ -9,9 +9,14 @@
  *
  */
 
-int main() {
+int main(int i) {
 
     int dupa;
+    int dupa;
+    int a;
+    int i;
+    a = -x;
+    x = 0;
 
     dupa = 2+3*4;
     dupa = 2*3+4;
