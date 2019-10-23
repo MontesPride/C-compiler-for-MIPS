@@ -13,10 +13,10 @@ import java.util.Queue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 /**
  * @author sfilipiak
  */
+
 public class Parser {
 
     private Token token;
@@ -25,7 +25,6 @@ public class Parser {
     private Queue<Token> buffer = new LinkedList<>();
 
     private final Tokeniser tokeniser;
-
 
 
     public Parser(Tokeniser tokeniser) {
@@ -60,7 +59,7 @@ public class Parser {
             sb.append(e);
             sep = "|";
         }
-        System.out.println("Parsing error: expected ("+sb+") found ("+token+") at "+token.position);
+        System.out.println("Parsing error: expected (" + sb + ") found (" + token + ") at " + token.position);
 
         error++;
         lastErrorToken = token;
@@ -76,7 +75,7 @@ public class Parser {
             buffer.add(tokeniser.nextToken());
         assert buffer.size() >= i;
 
-        int cnt=1;
+        int cnt = 1;
         for (Token t : buffer) {
             if (cnt == i)
                 return t;
@@ -171,15 +170,14 @@ public class Parser {
     private List<VarDecl> parseStructVarDecls() {
         if (accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT)) {
             return parseVarDecls();
-        }
-        else {
+        } else {
             expect(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT);
             return null;
         }
     }
 
     private List<VarDecl> parseVarDecls() {
-        if ((accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID) && !lookAhead(2).tokenClass.equals(TokenClass.LPAR) ) || (accept(TokenClass.STRUCT) && !lookAhead(3).tokenClass.equals(TokenClass.LPAR))) {
+        if ((accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID) && !lookAhead(2).tokenClass.equals(TokenClass.LPAR)) || (accept(TokenClass.STRUCT) && !lookAhead(3).tokenClass.equals(TokenClass.LPAR))) {
             List<VarDecl> varDecls = new ArrayList<>();
 
             Type type = parseType();
@@ -212,7 +210,7 @@ public class Parser {
     }
 
     private List<FunDecl> parseFunDecls() {
-        if ((accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID) && lookAhead(2).tokenClass.equals(TokenClass.LPAR) ) || (accept(TokenClass.STRUCT) && lookAhead(3).tokenClass.equals(TokenClass.LPAR))) {
+        if ((accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID) && lookAhead(2).tokenClass.equals(TokenClass.LPAR)) || (accept(TokenClass.STRUCT) && lookAhead(3).tokenClass.equals(TokenClass.LPAR))) {
             List<FunDecl> funDecls = new ArrayList<>();
 
             Type type = parseType();
@@ -242,27 +240,27 @@ public class Parser {
 
     private Type parseType() {
         Type type = null;
-        if (accept(TokenClass.STRUCT))
+        if (accept(TokenClass.STRUCT)) {
             type = parseStructType();
-        else {
-                switch (token.tokenClass) {
-                    case INT:
-                        type = BaseType.INT;
-                        nextToken();
-                        break;
-                    case CHAR:
-                        type = BaseType.CHAR;
-                        nextToken();
-                        break;
-                    case VOID:
-                        type = BaseType.VOID;
-                        nextToken();
-                        break;
-                    default:
-                        expect(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID);
-                        break;
-                }
+        } else {
+            switch (token.tokenClass) {
+                case INT:
+                    type = BaseType.INT;
+                    nextToken();
+                    break;
+                case CHAR:
+                    type = BaseType.CHAR;
+                    nextToken();
+                    break;
+                case VOID:
+                    type = BaseType.VOID;
+                    nextToken();
+                    break;
+                default:
+                    expect(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID);
+                    break;
             }
+        }
 
         if (accept(TokenClass.ASTERIX)) {
             nextToken();
@@ -478,163 +476,217 @@ public class Parser {
 
     private Expr parseExpression() {
         if (accept(TokenClass.LPAR, TokenClass.MINUS, TokenClass.ASTERIX, TokenClass.SIZEOF, TokenClass.IDENTIFIER, TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL)) {
-            Expr inputExpression;
-            switch (token.tokenClass) {
-                case LPAR: {
-                    Token expressionLPARToken = lookAhead(1);
-                    if (expressionLPARToken != null && (expressionLPARToken.tokenClass.equals(TokenClass.INT) || expressionLPARToken.tokenClass.equals(TokenClass.CHAR) || expressionLPARToken.tokenClass.equals(TokenClass.VOID) || expressionLPARToken.tokenClass.equals(TokenClass.STRUCT)))
-                        inputExpression =  parseTypeCast();
-                    else {
-                        nextToken();
-                        Expr expression = parseExpression();
-                        expect(TokenClass.RPAR);
-                        inputExpression = expression;
-                    }
-                    break;
-                }
-                case MINUS: {
-                    nextToken();
-                    inputExpression = parseExpression();
-                    break;
-                }
-                case ASTERIX: {
-                    inputExpression = parseValueAt();
-                    break;
-                }
-                case SIZEOF: {
-                    inputExpression = parseSizeOf();
-                    break;
-                }
-                case IDENTIFIER: {
-                    Token identifierToken = lookAhead(1);
-                    if (identifierToken != null && identifierToken.tokenClass.equals(TokenClass.LPAR))
-                        inputExpression = parseFuncCall();
-                    else {
-                        String name = token.data;
-                        nextToken();
-                        inputExpression = new VarExpr(name);
-                    }
-                    break;
-                }
-                case INT_LITERAL: {
-                    inputExpression = new IntLiteral(Integer.parseInt(token.data));
-                    expect(TokenClass.INT_LITERAL);
-                    break;
-                }
-                case CHAR_LITERAL: {
-                    inputExpression = new ChrLiteral(token.data.charAt(0));
-                    expect(TokenClass.CHAR_LITERAL);
-                    break;
-                }
-                case STRING_LITERAL: {
-                    inputExpression = new StrLiteral(token.data);
-                    expect(TokenClass.STRING_LITERAL);
-                    break;
-                }
-                default:
-                    expect(TokenClass.INVALID);
-                    return null;
-            }
-            return parseExpressionWithoutLeftRecursion(inputExpression);
+            return parseExpression_8();
         } else {
             expect(TokenClass.LPAR, TokenClass.MINUS, TokenClass.ASTERIX, TokenClass.SIZEOF, TokenClass.IDENTIFIER, TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL);
         }
         return null;
     }
 
-    private Expr parseExpressionWithoutLeftRecursion(Expr inputExpression) {
-        if (accept(TokenClass.GT, TokenClass.LT, TokenClass.GE, TokenClass.LE, TokenClass.NE, TokenClass.EQ, TokenClass.PLUS, TokenClass.MINUS, TokenClass.DIV, TokenClass.ASTERIX, TokenClass.REM, TokenClass.OR, TokenClass.AND, TokenClass.LSBR, TokenClass.DOT)) {
+    private Expr parseExpression_8() {
+        Expr lhs = parseExpression_7();
+        if (accept(TokenClass.OR)) {
+            Op op = Op.OR;
+            nextToken();
+            Expr rhs = parseExpression_8();
+            return new BinOp(lhs, op, rhs);
+        }
+        return lhs;
+    }
+
+    private Expr parseExpression_7() {
+        Expr lhs = parseExpression_6();
+        if (accept(TokenClass.AND)) {
+            Op op = Op.AND;
+            nextToken();
+            Expr rhs = parseExpression_7();
+            return new BinOp(lhs, op, rhs);
+        }
+        return lhs;
+    }
+
+    private Expr parseExpression_6() {
+        Expr lhs = parseExpression_5();
+        if (accept(TokenClass.EQ, TokenClass.NE)) {
+            Op op;
             switch (token.tokenClass) {
-                case GT: {
-                    Op op = Op.GT;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
-                }
-                case LT: {
-                    Op op = Op.LT;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
-                }
-                case GE: {
-                    Op op = Op.GE;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
-                }
-                case LE: {
-                    Op op = Op.LE;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
+                case EQ: {
+                    op = Op.EQ;
+                    break;
                 }
                 case NE: {
-                    Op op = Op.NE;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
-                }
-                case EQ: {
-                    Op op = Op.EQ;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
-                }
-                case PLUS: {
-                    Op op = Op.ADD;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
-                }
-                case MINUS: {
-                    Op op = Op.SUB;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
-                }
-                case DIV: {
-                    Op op = Op.DIV;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
-                }
-                case ASTERIX: {
-                    Op op = Op.MUL;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
-                }
-                case REM: {
-                    Op op = Op.MOD;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
-                }
-                case OR: {
-                    Op op = Op.OR;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
-                }
-                case AND: {
-                    Op op = Op.AND;
-                    nextToken();
-                    Expr rhs = parseExpression();
-                    return new BinOp(inputExpression, op, rhs);
-                }
-                case LSBR: {
-                    return parseArrayAccess(inputExpression);
-                }
-                case DOT: {
-                    return parseFieldAccess(inputExpression);
+                    op = Op.NE;
+                    break;
                 }
                 default:
-                    expect(TokenClass.INVALID);
-                    return inputExpression;
+                    op = null;
             }
+            nextToken();
+            Expr rhs = parseExpression_6();
+            return new BinOp(lhs, op, rhs);
         }
-        return inputExpression;
+        return lhs;
+    }
+
+    private Expr parseExpression_5() {
+        Expr lhs = parseExpression_4();
+        if (accept(TokenClass.GT, TokenClass.LT, TokenClass.GE, TokenClass.LE)) {
+            Op op;
+            switch (token.tokenClass) {
+                case GT: {
+                    op = Op.GT;
+                    break;
+                }
+                case LT: {
+                    op = Op.LT;
+                    break;
+                }
+                case GE: {
+                    op = Op.GE;
+                    break;
+                }
+                case LE: {
+                    op = Op.LE;
+                    break;
+                }
+                default:
+                    op = null;
+            }
+            nextToken();
+            Expr rhs = parseExpression_5();
+            return new BinOp(lhs, op, rhs);
+        }
+        return lhs;
+    }
+
+    private Expr parseExpression_4() {
+        Expr lhs = parseExpression_3();
+        if (accept(TokenClass.PLUS, TokenClass.MINUS)) {
+            Op op;
+            switch (token.tokenClass) {
+                case PLUS: {
+                    op = Op.ADD;
+                    break;
+                }
+                case MINUS: {
+                    op = Op.SUB;
+                }
+                default:
+                    op = null;
+            }
+            nextToken();
+            Expr rhs = parseExpression_4();
+            return new BinOp(lhs, op, rhs);
+        }
+        return lhs;
+    }
+
+    private Expr parseExpression_3() {
+        Expr lhs = parseExpression_1_2();
+        if (accept(TokenClass.ASTERIX, TokenClass.DIV, TokenClass.REM)) {
+            Op op;
+            switch (token.tokenClass) {
+                case ASTERIX: {
+                    op = Op.MUL;
+                    break;
+                }
+                case DIV: {
+                    op = Op.DIV;
+                    break;
+                }
+                case REM: {
+                    op = Op.MOD;
+                    break;
+                }
+                default:
+                    op = null;
+            }
+            nextToken();
+            Expr rhs = parseExpression_3();
+            return new BinOp(lhs, op, rhs);
+        }
+        return lhs;
+    }
+
+    private Expr parseExpression_1_2() {
+        if (accept(TokenClass.LPAR, TokenClass.MINUS, TokenClass.ASTERIX, TokenClass.SIZEOF, TokenClass.IDENTIFIER, TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL)) {
+            Expr lhs;
+            switch (token.tokenClass) {
+                case LPAR: {
+                    Token expressionLPARToken = lookAhead(1);
+                    if (expressionLPARToken != null && (expressionLPARToken.tokenClass.equals(TokenClass.INT) || expressionLPARToken.tokenClass.equals(TokenClass.CHAR) || expressionLPARToken.tokenClass.equals(TokenClass.VOID) || expressionLPARToken.tokenClass.equals(TokenClass.STRUCT)))
+                        lhs = parseTypeCast();
+                    else {
+                        nextToken();
+                        Expr expression = parseExpression();
+                        expect(TokenClass.RPAR);
+                        lhs = expression;
+                    }
+                    break;
+                }
+                case MINUS: {
+                    nextToken();
+                    lhs = new BinOp(new IntLiteral(0), Op.SUB, parseExpression());
+                    break;
+                }
+                case ASTERIX: {
+                    lhs = parseValueAt();
+                    break;
+                }
+                case SIZEOF: {
+                    lhs = parseSizeOf();
+                    break;
+                }
+                case IDENTIFIER: {
+                    Token identifierToken = lookAhead(1);
+                    if (identifierToken != null && identifierToken.tokenClass.equals(TokenClass.LPAR))
+                        lhs = parseFuncCall();
+                    else {
+                        String name = token.data;
+                        nextToken();
+                        lhs = new VarExpr(name);
+                    }
+                    break;
+                }
+                case INT_LITERAL: {
+                    lhs = new IntLiteral(Integer.parseInt(token.data));
+                    expect(TokenClass.INT_LITERAL);
+                    break;
+                }
+                case CHAR_LITERAL: {
+                    lhs = new ChrLiteral(token.data.charAt(0));
+                    expect(TokenClass.CHAR_LITERAL);
+                    break;
+                }
+                case STRING_LITERAL: {
+                    lhs = new StrLiteral(token.data);
+                    expect(TokenClass.STRING_LITERAL);
+                    break;
+                }
+                default:
+                    return null;
+            }
+            return parseExpression_left(lhs);
+        } else {
+            return null;
+        }
+    }
+
+    private Expr parseExpression_left(Expr lhs) {
+        if (accept(TokenClass.LSBR, TokenClass.DOT)) {
+            switch (token.tokenClass) {
+                case LSBR: {
+                    return parseArrayAccess(lhs);
+                }
+                case DOT: {
+                    return parseFieldAccess(lhs);
+                }
+                default:
+                    return lhs;
+            }
+        } else {
+            return lhs;
+        }
     }
 
     private FunCallExpr parseFuncCall() {
