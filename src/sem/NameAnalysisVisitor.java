@@ -52,7 +52,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
     @Override
     public Void visitStructTypeDecl(StructTypeDecl sts) {
         Symbol s = scope.lookupCurrent(sts.structType.name);
-        if (s != null)
+        if (s != null && s.isStruct())
             error("StructType" + sts.structType.name + "already declared");
         else
             scope.put(new StructTypeSymbol(sts));
@@ -167,6 +167,8 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
             error("Function " + fc.name + " not declared!");
         } else if (!s.isFunc()) {
             error(fc.name + "is not declared as a function");
+        } else {
+            fc.fd = ((FuncSymbol) s).fd;
         }
         return null;
     }
