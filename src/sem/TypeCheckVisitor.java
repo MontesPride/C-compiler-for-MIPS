@@ -2,6 +2,8 @@ package sem;
 
 import ast.*;
 
+import java.util.Arrays;
+
 public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 
 	@Override
@@ -166,16 +168,19 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 
 	@Override
 	public Type visitIntLiteral(IntLiteral il) {
+	    il.type = BaseType.INT;
 		return BaseType.INT;
 	}
 
 	@Override
 	public Type visitStrLiteral(StrLiteral sl) {
+	    sl.type = BaseType.CHAR;
 		return new PointerType(BaseType.CHAR);
 	}
 
 	@Override
 	public Type visitChrLiteral(ChrLiteral cl) {
+	    cl.type = BaseType.CHAR;
 		return BaseType.CHAR;
 	}
 
@@ -232,8 +237,15 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 
 	@Override
 	public Type visitArrayAccessExpr(ArrayAccessExpr aa) {
-		// To be completed...
-		return null;
+		if (!aa.index.accept(this).equals(BaseType.INT)) {
+		    error("Invalid array index");
+		    return null;
+        }
+		if (!aa.name.accept(this).getClass().equals(ArrayType.class) && !aa.name.accept(this).getClass().equals(PointerType.class)) {
+            error("Invalid type of array");
+            return null;
+        }
+		return aa.name.accept(this);
 	}
 
 	@Override
@@ -244,46 +256,62 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 
 	@Override
 	public Type visitValueAtExpr(ValueAtExpr va) {
-        visitExpression(va.expression);
-		return null;
+        if (!va.expression.accept(this).getClass().equals(PointerType.class)) {
+            error("Invalid ValueAt Type");
+            return null;
+        }
+        va.type = va.expression.accept(this);
+		return va.type;
 	}
 
 	@Override
 	public Type visitSizeOfExpr(SizeOfExpr so) {
-		// To be completed...
-		return null;
+		return BaseType.INT;
 	}
 
 	@Override
 	public Type visitTypecastExpr(TypecastExpr tc) {
         visitExpression(tc.expression);
-		return null;
+        tc.expression.type = tc.expression.accept(this);
+		return tc.type;
 	}
 
 	@Override
 	public Type visitExprStmt(ExprStmt es) {
         visitExpression(es.expression);
-		return null;
+        es.expression.type = es.expression.accept(this);
+		return es.expression.type;
 	}
 
 	@Override
 	public Type visitWhile(While w) {
-        visitExpression(w.expression);
-        visitStatement(w.statement);
+	    try {
+            if (!w.expression.accept(this).equals(BaseType.INT)){
+                error("Invalid while expression");
+            }
+            visitStatement(w.statement);
+        } catch (Exception ignored) {}
 		return null;
 	}
 
 	@Override
 	public Type visitIf(If i) {
-        visitExpression(i.expression);
-        visitStatement(i.ifStatement);
-        if (i.elseStatement != null)
-            visitStatement(i.elseStatement);
+	    try {
+            if (!i.expression.accept(this).equals(BaseType.INT)){
+                error("Invalid If expression");
+            }
+            visitStatement(i.ifStatement);
+            if (i.elseStatement != null)
+                visitStatement(i.elseStatement);
+        } catch (Exception ignored) {}
+
 		return null;
 	}
 
 	@Override
 	public Type visitAssign(Assign a) {
+	    return null;
+	    /*
 	    try {
             Type lhsT = a.lhs.accept(this);
             Type rhsT = a.rhs.accept(this);
@@ -291,11 +319,9 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
                 error("Incorrect assign type");
                 return null;
             } else {
-                return a.lhs.accept(this);
+                return lhsT;
             }
-        } catch (Exception e) { return null; }
-
-
+        } catch (Exception e) { return null; }*/
 	}
 
 	@Override
