@@ -11,21 +11,53 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 	}
 
 	@Override
-	public Type visitStructTypeDecl(StructTypeDecl st) {
-		// To be completed...
-		return null;
+	public Type visitStructTypeDecl(StructTypeDecl sts) {
+        return null;
 	}
 
 	@Override
 	public Type visitBlock(Block b) {
-		// To be completed...
+        for (VarDecl vd : b.variables)
+            visitVarDecl(vd);
+        for (Stmt stmt : b.statements)
+            visitStatement(stmt);
 		return null;
 	}
 
+    public void visitStatement(Stmt stmt) {
+        switch (stmt.getClass().getSimpleName()) {
+            case "Block": {
+                visitBlock((Block) stmt);
+                return;
+            }
+            case "While": {
+                visitWhile((While) stmt);
+                return;
+            }
+            case "If": {
+                visitIf((If) stmt);
+                return;
+            }
+            case "Assign": {
+                visitAssign((Assign) stmt);
+                return;
+            }
+            case "Return": {
+                visitReturn((Return) stmt);
+                return;
+            }
+            case "ExprStmt": {
+                visitExprStmt((ExprStmt) stmt);
+            }
+        }
+    }
+
 	@Override
-	public Type visitFunDecl(FunDecl p) {
-		// To be completed...
-		return null;
+	public Type visitFunDecl(FunDecl fd) {
+	    for (VarDecl vd : fd.params)
+	        visitVarDecl(vd);
+	    visitBlock(fd.block);
+        return null;
 	}
 
 
@@ -42,20 +74,37 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 
 	@Override
 	public Type visitVarDecl(VarDecl vd) {
-		// To be completed...
-		return null;
+        return null;
 	}
 
 	@Override
 	public Type visitVarExpr(VarExpr v) {
-		// To be completed...
-		return null;
+	    try {
+            v.type = v.vd.type;
+            return v.type;
+        } catch (Exception e) { return null; }
 	}
 
 	@Override
 	public Type visitFunCallExpr(FunCallExpr fc) {
-		// To be completed...
-		return null;
+	    /*try {
+            if (fc.fd.params.size() != fc.params.size()) {
+                error("Invalid number of parameters");
+                return null;
+            }
+            for (int i = 0; i < fc.params.size(); i++) {
+                Type paramType = fc.params.get(i).accept(this);
+                if (fc.fd.params.get(i).type != paramType) {
+                    error("Invalid Type of parameter " + fc.fd.params.get(i).varName);
+                    return null;
+                }
+            }
+            fc.type = fc.fd.type;
+            return fc.fd.type;
+        } catch (Exception e) { return null; }*/
+	    try {
+	        return fc.fd.type;
+        } catch (Exception e) { return null; }
 	}
 
 	@Override
@@ -76,62 +125,103 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 		return null;
 	}
 
+    public Type visitExpression(Expr expression) {
+        switch (expression.getClass().getSimpleName()) {
+            case "IntLiteral": {
+                return visitIntLiteral((IntLiteral) expression);
+            }
+            case "StrLiteral": {
+                return visitStrLiteral((StrLiteral) expression);
+            }
+            case "ChrLiteral": {
+                return visitChrLiteral((ChrLiteral) expression);
+            }
+            case "VarExpr": {
+                return visitVarExpr((VarExpr) expression);
+            }
+            case "FunCallExpr": {
+                return visitFunCallExpr((FunCallExpr) expression);
+            }
+            case "BinOp": {
+                return visitBinOp((BinOp) expression);
+            }
+            case "ArrayAccessExpr": {
+                return visitArrayAccessExpr((ArrayAccessExpr) expression);
+            }
+            case "FieldAccessExpr": {
+                return visitFieldAccessExpr((FieldAccessExpr) expression);
+            }
+            case "ValueAtExpr": {
+                return visitValueAtExpr((ValueAtExpr) expression);
+            }
+            case "SizeOfExpr": {
+                return visitSizeOfExpr((SizeOfExpr) expression);
+            }
+            case "TypecastExpr": {
+                return visitTypecastExpr((TypecastExpr) expression);
+            }
+        }
+        return null;
+    }
+
 	@Override
 	public Type visitIntLiteral(IntLiteral il) {
-		// To be completed...
-		return null;
+		return BaseType.INT;
 	}
 
 	@Override
 	public Type visitStrLiteral(StrLiteral sl) {
-		// To be completed...
-		return null;
+		return new PointerType(BaseType.CHAR);
 	}
 
 	@Override
 	public Type visitChrLiteral(ChrLiteral cl) {
-		// To be completed...
-		return null;
+		return BaseType.CHAR;
 	}
 
 	@Override
 	public Type visitBinOp(BinOp bo) {
-		Type lhsT = bo.lhs.accept(this);
-		Type rhsT = bo.rhs.accept(this);
-		switch (bo.op) {
-			case ADD:
-			case SUB:
-			case MUL:
-			case DIV:
-			case MOD:
-			case OR:
-			case AND:
-			case GT:
-			case LT:
-			case GE:
-			case LE: {
-				if (lhsT.equals(BaseType.INT) && rhsT.equals(BaseType.INT)) {
-					bo.type = BaseType.INT;
-					return BaseType.INT;
-				} else {
-					error("INVALID TYPES FOR THIS OPERATION(" + bo.op.toString() + "): lhsT = " + lhsT.toString() + ", rhsT = " + rhsT.toString());
-					return null;
-				}
-			}
-			case EQ:
-			case NE: {
-				if (lhsT.getClass().equals(StructType.class) || lhsT.getClass().equals(ArrayType.class) || lhsT.equals(BaseType.VOID) || rhsT.getClass().equals(StructType.class) || rhsT.getClass().equals(ArrayType.class) || rhsT.equals(BaseType.VOID)) {
-					error("INVALID TYPES FOR THIS OPERATION(" + bo.op.toString() + "): lhsT = " + lhsT.toString() + ", rhsT = " + rhsT.toString());
-					return null;
-				} else if (!lhsT.equals(rhsT)) {
-					error("TYPES DO NOT MATCH (" + bo.op.toString() + "): lhsT = " + lhsT.toString() + ", rhsT = " + rhsT.toString());
-				} else {
-					bo.type = lhsT;
-				}
-			}
-			default:
-				return null;
-		}
+	    try {
+            Type lhsT = bo.lhs.accept(this);
+            Type rhsT = bo.rhs.accept(this);
+            switch (bo.op) {
+                case ADD:
+                case SUB:
+                case MUL:
+                case DIV:
+                case MOD:
+                case OR:
+                case AND:
+                case GT:
+                case LT:
+                case GE:
+                case LE: {
+                    if (lhsT.equals(BaseType.INT) && rhsT.equals(BaseType.INT)) {
+                        bo.type = BaseType.INT;
+                        return BaseType.INT;
+                    } else {
+                        error("INVALID TYPES FOR THIS OPERATION(" + bo.op.toString() + "): lhsT = " + lhsT.toString() + ", rhsT = " + rhsT.toString());
+                        return null;
+                    }
+                }
+                case EQ:
+                case NE: {
+                    if ((lhsT.getClass().equals(StructType.class) || lhsT.getClass().equals(ArrayType.class) || lhsT.equals(BaseType.VOID)) || (rhsT.getClass().equals(StructType.class) || rhsT.getClass().equals(ArrayType.class) || rhsT.equals(BaseType.VOID))) {
+                        error("INVALID TYPES FOR THIS OPERATION(" + bo.op.toString() + "): lhsT = " + lhsT.toString() + ", rhsT = " + rhsT.toString());
+                        return null;
+                    } else if (!lhsT.getClass().getSimpleName().equals(rhsT.getClass().getSimpleName())) {
+                        error("TYPES DO NOT MATCH (" + bo.op.toString() + "): lhsT = " + lhsT.toString() + ", rhsT = " + rhsT.toString());
+                        return null;
+                    } else {
+                        bo.type = lhsT;
+                        return lhsT;
+                    }
+                }
+                default:
+                    error("INVALID OPERATION" + bo.op);
+                    return null;
+            }
+        } catch (Exception e) { return null; }
 	}
 
 	@Override
@@ -154,7 +244,7 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 
 	@Override
 	public Type visitValueAtExpr(ValueAtExpr va) {
-		// To be completed...
+        visitExpression(va.expression);
 		return null;
 	}
 
@@ -166,32 +256,46 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 
 	@Override
 	public Type visitTypecastExpr(TypecastExpr tc) {
-		// To be completed...
+        visitExpression(tc.expression);
 		return null;
 	}
 
 	@Override
 	public Type visitExprStmt(ExprStmt es) {
-		// To be completed...
+        visitExpression(es.expression);
 		return null;
 	}
 
 	@Override
 	public Type visitWhile(While w) {
-		// To be completed...
+        visitExpression(w.expression);
+        visitStatement(w.statement);
 		return null;
 	}
 
 	@Override
 	public Type visitIf(If i) {
-		// To be completed...
+        visitExpression(i.expression);
+        visitStatement(i.ifStatement);
+        if (i.elseStatement != null)
+            visitStatement(i.elseStatement);
 		return null;
 	}
 
 	@Override
 	public Type visitAssign(Assign a) {
-		// To be completed...
-		return null;
+	    try {
+            Type lhsT = a.lhs.accept(this);
+            Type rhsT = a.rhs.accept(this);
+            if (lhsT != rhsT) {
+                error("Incorrect assign type");
+                return null;
+            } else {
+                return a.lhs.accept(this);
+            }
+        } catch (Exception e) { return null; }
+
+
 	}
 
 	@Override

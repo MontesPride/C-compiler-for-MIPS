@@ -13,13 +13,21 @@
     int var;
  };
 
+ int increment(int x) {
+    return x + 1;
+ }
+
 int main(int i) {
 
+    int var;
     int dupa;
     int a;
     struct strukt b;
     struct kupa assss;
     void zs;
+    var = 10;
+    //var = 'C';
+    var = increment(var);
     a = 9 % - 5 * 8;
     a = -x;
     a = --x;
