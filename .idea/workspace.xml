@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Name analysis, initial commit.">
+      <change afterPath="$PROJECT_DIR$/tests/main.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/Main$Mode.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/Main$Mode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/SizeOfExpr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/SizeOfExpr.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sem/SemanticAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/SemanticAnalyzer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/myEdgeTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/myEdgeTest.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gen/CodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/CodeGenerator.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -76,7 +76,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.myEdgeTest-sem">
+  <component name="RunManager" selected="Application.main-ast">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -225,6 +225,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Fibonacci-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/fibonacci.c fibonacci.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Fibonacci-lexer" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="ct-19-20" />
@@ -283,6 +291,22 @@
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="main-ast" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-ast tests/main.c main.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="main-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/main.c main.out" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -416,6 +440,9 @@
       <item itemvalue="Application.Fibonacci-parser" />
       <item itemvalue="Application.Fibonacci-lexer" />
       <item itemvalue="Application.Fibonacci-ast" />
+      <item itemvalue="Application.main-gen" />
+      <item itemvalue="Application.main-ast" />
+      <item itemvalue="Application.Fibonacci-gen" />
       <item itemvalue="Application.Fibonacci-sem" />
       <item itemvalue="Application.Tictactoe-sem" />
       <item itemvalue="Application.myTest-sem" />
