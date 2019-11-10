@@ -7,11 +7,9 @@ import java.util.*;
 public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     public Scope scope;
-    public Map<String, Symbol> funDeclHelper;
 
     public NameAnalysisVisitor() {
         this.scope = new Scope();
-        this.funDeclHelper = new HashMap<>();
 
         addPredefinedFunctions();
     }
@@ -21,100 +19,115 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
         params = new ArrayList<>();
         params.add(new VarDecl(new PointerType(BaseType.CHAR), "s"));
-        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_s", params, new Block(new ArrayList<>(), new ArrayList<>()))));
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_s", params, new Block(new ArrayList<>(), new ArrayList<>()))), false);
 
         params = new ArrayList<>();
         params.add(new VarDecl(BaseType.INT, "i"));
-        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_i", params, new Block(new ArrayList<>(), new ArrayList<>()))));
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_i", params, new Block(new ArrayList<>(), new ArrayList<>()))), false);
 
         params = new ArrayList<>();
         params.add(new VarDecl(BaseType.CHAR, "c"));
-        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_c", params, new Block(new ArrayList<>(), new ArrayList<>()))));
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_c", params, new Block(new ArrayList<>(), new ArrayList<>()))), false);
 
         params = new ArrayList<>();
-        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "read_c", params, new Block(new ArrayList<>(), new ArrayList<>()))));
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "read_c", params, new Block(new ArrayList<>(), new ArrayList<>()))), false);
 
         params = new ArrayList<>();
-        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "read_i", params, new Block(new ArrayList<>(), new ArrayList<>()))));
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "read_i", params, new Block(new ArrayList<>(), new ArrayList<>()))), false);
 
         params = new ArrayList<>();
         params.add(new VarDecl(BaseType.INT, "size"));
-        scope.put(new FuncSymbol(new FunDecl(new PointerType(BaseType.VOID), "mcmalloc", params, new Block(new ArrayList<>(), new ArrayList<>()))));
+        scope.put(new FuncSymbol(new FunDecl(new PointerType(BaseType.VOID), "mcmalloc", params, new Block(new ArrayList<>(), new ArrayList<>()))), false);
 
     }
 
+    public boolean putSymbol(String name, boolean isStructSymbol) {
+        Symbol s = scope.lookupCurrent(name, isStructSymbol);
+        if (s != null) {
+            error("Symbol %s has been declared!\n", name);
+            return false;
+        }
+        return true;
+    }
+
+    public <S extends Symbol> S getSymbol(String name, Class<S> symbolClass, boolean isStructSymbol) {
+        Symbol s = scope.lookup(name, isStructSymbol);
+        if (s == null) {
+            error("Symbol %s has not been declared!\n", name);
+            return null;
+        }
+        if (!symbolClass.isInstance(s)) {
+            error("%s is not of Type: %s\n", name, symbolClass);
+            return null;
+        }
+        return symbolClass.cast(s);
+    }
+
+
     @Override
     public Void visitBaseType(BaseType bt) {
-        // To be completed...
         return null;
     }
 
     @Override
     public Void visitStructTypeDecl(StructTypeDecl sts) {
-        Symbol s = scope.lookupCurrent(sts.structType.name);
-        if (s != null && s.isStruct())
-            error("StructType" + sts.structType.name + "already declared");
-        else
-            scope.put(new StructTypeSymbol(sts));
+        if (!putSymbol(sts.structType.name, true))
+            return null;
+
+        scope.put(new StructTypeSymbol(sts), true);
+        sts.structType.accept(this);
+
+        Scope oldScope = scope;
+        scope = new Scope(oldScope);
+        for (VarDecl vd : sts.variables)
+            vd.accept(this);
+        scope = oldScope;
+
         return null;
     }
 
     @Override
     public Void visitBlock(Block b) {
-        Scope oldScope = scope;
-        scope = new Scope(oldScope);
-        for (VarDecl vd : b.variables)
-            visitVarDecl(vd);
-        for (Stmt stmt : b.statements)
-            visitStatement(stmt);
-        scope = oldScope;
-        return null;
+        return visitBlock(b, true);
+
     }
 
-    public void visitStatement(Stmt stmt) {
-        switch (stmt.getClass().getSimpleName()) {
-            case "Block": {
-                visitBlock((Block) stmt);
-                break;
-            }
-            case "While": {
-                visitWhile((While) stmt);
-                break;
-            }
-            case "If": {
-                visitIf((If) stmt);
-                break;
-            }
-            case "Assign": {
-                visitAssign((Assign) stmt);
-                break;
-            }
-            case "Return": {
-                visitReturn((Return) stmt);
-                break;
-            }
-            case "ExprStmt": {
-                visitExprStmt((ExprStmt) stmt);
-                break;
-            }
+    // isNewScope is used to help with functions where
+    // parameters need to be a part of an inner block
+    public Void visitBlock(Block b, boolean isNewScope) {
+        Scope oldScope = null;
+        if (isNewScope) {
+            oldScope = scope;
+            scope = new Scope(oldScope);
         }
+
+        for (VarDecl vd : b.variables)
+            vd.accept(this);
+        for (Stmt stmt : b.statements)
+            stmt.accept(this);
+
+        if (isNewScope) {
+            scope = oldScope;
+        }
+        return null;
     }
 
     @Override
     public Void visitFunDecl(FunDecl fd) {
-        Symbol s = scope.lookupCurrent(fd.name);
-        if (s != null)
-            error("Function " + fd.name + " already declared");
-        else if (checkIfTypeDeclared(fd.type))
-            scope.put(new FuncSymbol(fd));
-        else
-            error("Function " + fd.name + " has incorrect return type " + fd.type);
+        if (!putSymbol(fd.name, false)) {
+            return null;
+        }
 
-        funDeclHelper = new HashMap<>();
+        scope.put(new FuncSymbol(fd), false);
+
+        Scope oldScope = scope;
+        scope = new Scope(oldScope);
+        fd.type.accept(this);
+
         for (VarDecl vd : fd.params)
-            funDeclHelper.put(vd.varName, new VarSymbol(vd));
-        visitBlock(fd.block);
-        funDeclHelper.clear();
+            vd.accept(this);
+        visitBlock(fd.block, false);
+        scope = oldScope;
 
         return null;
     }
@@ -123,257 +136,179 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
     @Override
     public Void visitProgram(Program p) {
         for (StructTypeDecl std : p.structTypeDecls)
-            visitStructTypeDecl(std);
+            std.accept(this);
         for (VarDecl vd : p.varDecls)
-            visitVarDecl(vd);
+            vd.accept(this);
         for (FunDecl fd : p.funDecls)
-            visitFunDecl(fd);
+            fd.accept(this);
         return null;
     }
 
     @Override
     public Void visitVarDecl(VarDecl vd) {
-        Symbol s = funDeclHelper.get(vd.varName);
-        if (s == null)
-            s = scope.lookupCurrent(vd.varName);
-        if (s != null)
-            error("Variable " + vd.varName + " already declared!");
-        else if (checkIfTypeDeclared(vd.type) && !vd.type.equals(BaseType.VOID))
-            scope.put(new VarSymbol(vd));
-        else
-            error("Variable " + vd.varName + " has incorrect type " + vd.type);
+        if (!putSymbol(vd.varName, false)) {
+            return null;
+        }
+
+        vd.type.accept(this);
+        scope.put(new VarSymbol(vd), false);
+
         return null;
     }
 
     @Override
     public Void visitVarExpr(VarExpr v) {
-        Symbol s = funDeclHelper.get(v.name);
-        if (s == null)
-            s = scope.lookup(v.name);
-        if (s == null) {
-            error("Variable " + v.name + " not declared!");
-        } else if (!s.isVar()) {
-            error(v.name + "is not declared as a variable");
-        } else {
-            v.vd = ((VarSymbol) s).vd;
+        VarSymbol s = getSymbol(v.name, VarSymbol.class, false);
+
+        if (s != null)
+            v.vd = s.vd;
+
+        // Avoid possible NullPointerExceptions
+        if (v.vd == null) {
+            v.vd = new VarDecl(BaseType.VOID, v.name);
         }
+
         return null;
     }
 
     @Override
     public Void visitFunCallExpr(FunCallExpr fc) {
-        Symbol s = scope.lookup(fc.name);
-        if (s == null) {
-            error("Function " + fc.name + " not declared!");
-        } else if (!s.isFunc()) {
-            error(fc.name + "is not declared as a function");
-        } else {
-            fc.fd = ((FuncSymbol) s).fd;
+        FuncSymbol s = getSymbol(fc.name, FuncSymbol.class, false);
+
+        if (s != null)
+            fc.fd = s.fd;
+
+        // Avoid possible NullPointerExceptions
+        if (fc.fd == null) {
+            List empty = Collections.emptyList();
+            fc.fd = new FunDecl(BaseType.VOID, fc.name, new ArrayList<>(), new Block(new ArrayList<>(), new ArrayList<>()));
         }
+
+        for (Expr e : fc.params)
+            e.accept(this);
+
         return null;
     }
 
     @Override
     public Void visitStructType(StructType st) {
-        Symbol s = scope.lookup(st.name);
-        if (s == null) {
-            error("StructType " + st.name + " not declared!");
-        } else if (!s.isStruct()) {
-            error(st.name + "is not declared as a StructType");
+        StructTypeSymbol s = getSymbol(st.name, StructTypeSymbol.class, true);
+
+        if (s != null)
+            st.std = s.std;
+
+        // Avoid possible NullPointerExceptions
+        if (st.std == null) {
+            st.std = new StructTypeDecl(new StructType(st.name), new ArrayList<>());
         }
+
         return null;
     }
 
     @Override
     public Void visitPointerType(PointerType pt) {
-        // To be completed...
+        pt.type.accept(this);
         return null;
     }
 
     @Override
     public Void visitArrayType(ArrayType at) {
-        // To be completed...
+        at.type.accept(this);
         return null;
-    }
-
-    public void visitExpression(Expr expression) {
-        switch (expression.getClass().getSimpleName()) {
-            case "IntLiteral": {
-                visitIntLiteral((IntLiteral) expression);
-                break;
-            }
-            case "StrLiteral": {
-                visitStrLiteral((StrLiteral) expression);
-                break;
-            }
-            case "ChrLiteral": {
-                visitChrLiteral((ChrLiteral) expression);
-                break;
-            }
-            case "VarExpr": {
-                visitVarExpr((VarExpr) expression);
-                break;
-            }
-            case "FunCallExpr": {
-                visitFunCallExpr((FunCallExpr) expression);
-                break;
-            }
-            case "BinOp": {
-                visitBinOp((BinOp) expression);
-                break;
-            }
-            case "ArrayAccessExpr": {
-                visitArrayAccessExpr((ArrayAccessExpr) expression);
-                break;
-            }
-            case "FieldAccessExpr": {
-                visitFieldAccessExpr((FieldAccessExpr) expression);
-                break;
-            }
-            case "ValueAtExpr": {
-                visitValueAtExpr((ValueAtExpr) expression);
-                break;
-            }
-            case "SizeOfExpr": {
-                visitSizeOfExpr((SizeOfExpr) expression);
-                break;
-            }
-            case "TypecastExpr": {
-                visitTypecastExpr((TypecastExpr) expression);
-                break;
-            }
-        }
-    }
-
-    public boolean checkIfTypeDeclared(Type type) {
-        if (type.equals(BaseType.INT) || type.equals(BaseType.CHAR) || type.equals(BaseType.VOID))
-            return true;
-        if (type.getClass().equals(ArrayType.class)) {
-            ArrayType arrayType = (ArrayType) type;
-            return checkIfTypeDeclared(arrayType.type);
-        }
-        if (type.getClass().equals(PointerType.class)) {
-            PointerType pointerType = (PointerType) type;
-            return checkIfTypeDeclared(pointerType.type);
-        }
-        if (type.getClass().equals(StructType.class)) {
-            StructType structType = (StructType) type;
-            return scope.lookup(structType.name) != null;
-        }
-        return true;
     }
 
     @Override
     public Void visitIntLiteral(IntLiteral il) {
-        // To be completed...
         return null;
     }
 
     @Override
     public Void visitStrLiteral(StrLiteral sl) {
-        // To be completed...
         return null;
     }
 
     @Override
     public Void visitChrLiteral(ChrLiteral cl) {
-        // To be completed...
         return null;
     }
 
     @Override
     public Void visitBinOp(BinOp bo) {
-        // To be completed...
+        bo.lhs.accept(this);
+        bo.op.accept(this);
+        bo.rhs.accept(this);
         return null;
     }
 
     @Override
     public Void visitOp(Op o) {
-        // To be completed...
         return null;
     }
 
     @Override
     public Void visitArrayAccessExpr(ArrayAccessExpr aa) {
-        visitExpression(aa.name);
+        aa.name.accept(this);
+        aa.index.accept(this);
         return null;
     }
 
     @Override
     public Void visitFieldAccessExpr(FieldAccessExpr fa) {
-        if (fa.name.getClass().equals(VarExpr.class)) {
-            visitVarExpr((VarExpr) (fa.name));
-            VarExpr ve = (VarExpr) (fa.name);
-            if (ve.vd != null && ve.vd.type.getClass().equals(StructType.class)) {
-                VarSymbol var = (VarSymbol) scope.lookup(ve.name);
-                String structName = ((StructType) (var.vd.type)).name;
-                if (scope.lookup(structName) != null && scope.lookup(structName).isStruct()) {
-                    StructTypeSymbol structSymbol = (StructTypeSymbol) (scope.lookup(structName));
-                    for (VarDecl vd : structSymbol.std.variables) {
-                        if (vd.varName.equals(fa.field))
-                            return null;
-                    }
-                }
-            }
-            error("Field access " + fa.field + " not allowed for variable " + ve.name);
-        }
+        fa.name.accept(this);
         return null;
     }
 
     @Override
     public Void visitValueAtExpr(ValueAtExpr va) {
-        visitExpression(va.expression);
+        va.expression.accept(this);
         return null;
     }
 
     @Override
     public Void visitSizeOfExpr(SizeOfExpr so) {
-        if (!checkIfTypeDeclared(so.type))
-            error("SizeOfExpr of type that has not been declared");
+        so.type.accept(this);
         return null;
     }
 
     @Override
     public Void visitTypecastExpr(TypecastExpr tc) {
-        visitExpression(tc.expression);
-        if (!checkIfTypeDeclared(tc.type))
-            error("TypecastExpr of type that has not been declared");
+        tc.expression.accept(this);
         return null;
     }
 
     @Override
     public Void visitExprStmt(ExprStmt es) {
-        visitExpression(es.expression);
+        es.expression.accept(this);
         return null;
     }
 
     @Override
     public Void visitWhile(While w) {
-        visitExpression(w.expression);
-        visitStatement(w.statement);
+        w.expression.accept(this);
+        w.statement.accept(this);
         return null;
     }
 
     @Override
     public Void visitIf(If i) {
-        visitExpression(i.expression);
-        visitStatement(i.ifStatement);
+        i.expression.accept(this);
+        i.ifStatement.accept(this);
         if (i.elseStatement != null)
-            visitStatement(i.elseStatement);
+            i.elseStatement.accept(this);
         return null;
     }
 
     @Override
     public Void visitAssign(Assign a) {
-        visitExpression(a.lhs);
-        visitExpression(a.rhs);
+        a.lhs.accept(this);
+        a.rhs.accept(this);
         return null;
     }
 
     @Override
     public Void visitReturn(Return r) {
         if (r.expression != null)
-            visitExpression(r.expression);
+            r.expression.accept(this);
         return null;
     }
 

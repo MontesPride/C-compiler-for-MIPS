@@ -73,7 +73,16 @@ public class CodeGenerator implements ASTVisitor<Register> {
 
     @Override
     public Register visitProgram(Program p) {
-        // TODO: to complete
+        writer.write(".data\n");
+        writer.write(".text\n");
+        for (StructTypeDecl std : p.structTypeDecls)
+            visitStructTypeDecl(std);
+        for (VarDecl vd : p.varDecls)
+            visitVarDecl(vd);
+        for (FunDecl fd : p.funDecls)
+            visitFunDecl(fd);
+        writer.write("li   $v0, 10\n");
+        writer.write("syscall\n");
         return null;
     }
 
