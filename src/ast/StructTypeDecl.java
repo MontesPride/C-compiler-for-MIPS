@@ -11,8 +11,6 @@ public class StructTypeDecl implements ASTNode {
         this.variables = variables;
     }
 
-    public <T> T accept(ASTVisitor<T> v) {
-        return v.visitStructTypeDecl(this);
-    }
+    public <T> T accept(ASTVisitor<T> v) { return v.visitStructTypeDecl(this); }
 
 }

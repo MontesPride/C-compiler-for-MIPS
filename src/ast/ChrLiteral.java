@@ -8,4 +8,10 @@ public class ChrLiteral extends Expr {
     }
 
     public <T> T accept(ASTVisitor<T> v) { return v.visitChrLiteral(this); }
+
+    @Override
+    public String toString() {
+        return "\'" + StrLiteral.escapedString(Character.toString(value)) + "\'";
+    }
+
 }
