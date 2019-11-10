@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Part3 initial commit">
+    <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="NameAnalysisVisitor fixed.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/ArrayAccessExpr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/ArrayAccessExpr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/ArrayType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/ArrayType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/Assign.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/Assign.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/BinOp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/BinOp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/ChrLiteral.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/ChrLiteral.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/ExprStmt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/ExprStmt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/FieldAccessExpr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/FieldAccessExpr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/FunCallExpr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/FunCallExpr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/FunDecl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/FunDecl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/IntLiteral.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/IntLiteral.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/PointerType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/PointerType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/Return.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/Return.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/SizeOfExpr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/SizeOfExpr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/StrLiteral.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/StrLiteral.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ast/StructType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/StructType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gen/CodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/CodeGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/StructTypeDecl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/StructTypeDecl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/TypecastExpr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/TypecastExpr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/ValueAtExpr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/ValueAtExpr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/VarDecl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/VarDecl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/VarExpr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/VarExpr.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sem/BaseSemanticVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/BaseSemanticVisitor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sem/NameAnalysisVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/NameAnalysisVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sem/Scope.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/Scope.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sem/SemanticAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/SemanticAnalyzer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sem/Symbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/Symbol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -75,7 +95,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.myEdgeTest-sem">
+  <component name="RunManager" selected="Application.myTest-sem">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -681,7 +701,21 @@
       <option name="project" value="LOCAL" />
       <updated>1573379979014</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="NameAnalysisVisitor fixed.">
+      <created>1573392663642</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1573392663642</updated>
+    </task>
+    <task id="LOCAL-00031" summary="NameAnalysisVisitor fixed.">
+      <created>1573392818059</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1573392818059</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -698,7 +732,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added description of Part 2" />
     <MESSAGE value="Added warning about creating a branch if Part 1 deadline has not yet passed." />
     <MESSAGE value="Lexer is fully working now. Still not sure if the #include parsing is correct on piazza. Gcc compiler acts differently to what was said." />
     <MESSAGE value="Fixed #include to work as it was explained on piazza." />
@@ -723,33 +756,10 @@
     <MESSAGE value="Name analysis completed. Now working on Type analysis" />
     <MESSAGE value="Name analysis, initial commit." />
     <MESSAGE value="Part3 initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Part3 initial commit" />
+    <MESSAGE value="NameAnalysisVisitor fixed." />
+    <option name="LAST_COMMIT_MESSAGE" value="NameAnalysisVisitor fixed." />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/sem/TypeCheckVisitor.java</url>
-          <line>72</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/sem/NameAnalysisVisitor.java</url>
-          <line>194</line>
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/sem/NameAnalysisVisitor.java</url>
-          <line>116</line>
-          <option name="timeStamp" value="37" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/sem/NameAnalysisVisitor.java</url>
-          <line>73</line>
-          <option name="timeStamp" value="38" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="vd" />
@@ -758,6 +768,7 @@
         <watch expression="fd.block.statements" />
         <watch expression="((Assign)fd.block.statements.get(1)).lhs" custom="ast.Assign" />
         <watch expression="((VarDecl)((VarExpr)a.lhs).vd).type" custom="ast.VarDecl,ast.VarExpr" />
+        <watch expression="returnTypes" />
       </configuration>
     </watches-manager>
   </component>

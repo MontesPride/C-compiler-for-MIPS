@@ -1,15 +1,18 @@
 package ast;
 
 public class TypecastExpr extends Expr {
-    public final Type type;
+    public final Type castType;
     public final Expr expression;
 
-    public TypecastExpr(Type type, Expr expression) {
-        this.type = type;
+    public TypecastExpr(Type castType, Expr expression) {
+        this.castType = castType;
         this.expression = expression;
     }
 
     public <T> T accept(ASTVisitor<T> v) {
         return v.visitTypecastExpr(this);
     }
+
+    @Override
+    public String toString() { return "(" + castType.toString() + ") " + expression.toString(); }
 }

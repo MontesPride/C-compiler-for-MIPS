@@ -1,6 +1,6 @@
 package ast;
 
-import java.util.List;
+import java.util.*;
 
 public class FunCallExpr extends Expr {
     public final String name;
@@ -14,5 +14,11 @@ public class FunCallExpr extends Expr {
 
     public <T> T accept(ASTVisitor<T> v) {
         return v.visitFunCallExpr(this);
+    }
+
+    @Override
+    public String toString() {
+        String parameters = Arrays.toString(params.toArray());
+        return String.format("%s(%s)", name, parameters.substring(1, parameters.length() - 1));
     }
 }

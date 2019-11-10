@@ -12,4 +12,9 @@ public class Assign extends Stmt {
     public <T> T accept(ASTVisitor<T> v) {
         return v.visitAssign(this);
     }
+
+    @Override
+    public String toString() {
+        return lhs.toString() + " = " + rhs.toString();
+    }
 }

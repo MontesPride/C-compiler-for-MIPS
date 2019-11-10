@@ -7,15 +7,10 @@ public abstract class Symbol {
 		this.name = name;
 	}
 
-	public boolean isVar() {
-		return this.getClass().equals(VarSymbol.class);
-	}
+	boolean isVar() { return this instanceof VarSymbol; }
 
-	public boolean isFunc() {
-		return this.getClass().equals(FuncSymbol.class);
-	}
+	boolean isFun() { return this instanceof FuncSymbol; }
 
-	public boolean isStruct() {
-		return this.getClass().equals(StructTypeSymbol.class);
-	}
+	boolean isStruct() { return this instanceof StructTypeSymbol; }
+
 }

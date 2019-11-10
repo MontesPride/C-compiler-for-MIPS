@@ -19,32 +19,32 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
         params = new ArrayList<>();
         params.add(new VarDecl(new PointerType(BaseType.CHAR), "s"));
-        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_s", params, new Block(new ArrayList<>(), new ArrayList<>()))), false);
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_s", params, new Block(new ArrayList<>(), new ArrayList<>()), true)), false);
 
         params = new ArrayList<>();
         params.add(new VarDecl(BaseType.INT, "i"));
-        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_i", params, new Block(new ArrayList<>(), new ArrayList<>()))), false);
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_i", params, new Block(new ArrayList<>(), new ArrayList<>()), true)), false);
 
         params = new ArrayList<>();
         params.add(new VarDecl(BaseType.CHAR, "c"));
-        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_c", params, new Block(new ArrayList<>(), new ArrayList<>()))), false);
+        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "print_c", params, new Block(new ArrayList<>(), new ArrayList<>()), true)), false);
 
         params = new ArrayList<>();
-        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "read_c", params, new Block(new ArrayList<>(), new ArrayList<>()))), false);
+        scope.put(new FuncSymbol(new FunDecl(BaseType.CHAR, "read_c", params, new Block(new ArrayList<>(), new ArrayList<>()), true)), false);
 
         params = new ArrayList<>();
-        scope.put(new FuncSymbol(new FunDecl(BaseType.VOID, "read_i", params, new Block(new ArrayList<>(), new ArrayList<>()))), false);
+        scope.put(new FuncSymbol(new FunDecl(BaseType.INT, "read_i", params, new Block(new ArrayList<>(), new ArrayList<>()), true)), false);
 
         params = new ArrayList<>();
         params.add(new VarDecl(BaseType.INT, "size"));
-        scope.put(new FuncSymbol(new FunDecl(new PointerType(BaseType.VOID), "mcmalloc", params, new Block(new ArrayList<>(), new ArrayList<>()))), false);
+        scope.put(new FuncSymbol(new FunDecl(new PointerType(BaseType.VOID), "mcmalloc", params, new Block(new ArrayList<>(), new ArrayList<>()), true)), false);
 
     }
 
     public boolean putSymbol(String name, boolean isStructSymbol) {
         Symbol s = scope.lookupCurrent(name, isStructSymbol);
         if (s != null) {
-            error("Symbol %s has been declared!\n", name);
+            error("Symbol %s has been declared!", name);
             return true;
         }
         return false;
@@ -53,11 +53,11 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
     public <S extends Symbol> S getSymbol(String name, Class<S> symbolClass, boolean isStructSymbol) {
         Symbol s = scope.lookup(name, isStructSymbol);
         if (s == null) {
-            error("Symbol %s has not been declared!\n", name);
+            error("Symbol %s has not been declared!", name);
             return null;
         }
         if (!symbolClass.isInstance(s)) {
-            error("%s is not of Type: %s\n", name, symbolClass);
+            error("%s is not of Type: %s", name, symbolClass);
             return null;
         }
         return symbolClass.cast(s);
@@ -262,7 +262,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     @Override
     public Void visitSizeOfExpr(SizeOfExpr so) {
-        so.type.accept(this);
+        so.sizeOfType.accept(this);
         return null;
     }
 

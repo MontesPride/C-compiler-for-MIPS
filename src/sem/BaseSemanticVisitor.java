@@ -25,7 +25,7 @@ public abstract class BaseSemanticVisitor<T> implements SemanticVisitor<T> {
 	}
 
 	protected void error(String formatString, Object... params) {
-		System.err.printf(formatString, params);
+		System.err.printf(formatString + "\n", params);
 		errors++;
 	}
 

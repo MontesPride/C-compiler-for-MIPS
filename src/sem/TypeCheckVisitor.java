@@ -2,335 +2,376 @@ package sem;
 
 import ast.*;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 
+    public boolean isReturnable(Stmt stmt) {
+        return (stmt instanceof Block || stmt instanceof If || stmt instanceof While || stmt instanceof Return);
+    }
+
 	@Override
 	public Type visitBaseType(BaseType bt) {
-		// To be completed...
-		return null;
+		return bt;
 	}
 
 	@Override
 	public Type visitStructTypeDecl(StructTypeDecl sts) {
-        return null;
+	    return sts.structType.accept(this);
 	}
 
 	@Override
 	public Type visitBlock(Block b) {
         for (VarDecl vd : b.variables)
-            visitVarDecl(vd);
-        for (Stmt stmt : b.statements)
-            visitStatement(stmt);
-		return null;
-	}
+            vd.accept(this);
 
-    public void visitStatement(Stmt stmt) {
-        switch (stmt.getClass().getSimpleName()) {
-            case "Block": {
-                visitBlock((Block) stmt);
-                return;
+        List<Type> returnTypes = new ArrayList<>();
+        for (Stmt stmt : b.statements) {
+            Type returnType = stmt.accept(this);
+            if (!isReturnable(stmt) || returnType == null)
+                continue;
+            returnTypes.add(returnType);
+        }
+
+        if (returnTypes.isEmpty())
+            return null;
+
+        Type lastChecked = null;
+        boolean isSameType = true;
+        for (Type type : returnTypes) {
+            if (lastChecked == null) {
+                lastChecked = type;
             }
-            case "While": {
-                visitWhile((While) stmt);
-                return;
-            }
-            case "If": {
-                visitIf((If) stmt);
-                return;
-            }
-            case "Assign": {
-                visitAssign((Assign) stmt);
-                return;
-            }
-            case "Return": {
-                visitReturn((Return) stmt);
-                return;
-            }
-            case "ExprStmt": {
-                visitExprStmt((ExprStmt) stmt);
+            else if (!isSameType(lastChecked, type)) {
+                isSameType = false;
+                break;
             }
         }
-    }
+
+        if (!isSameType)
+            error("Block returnTypes are not unified. ReturnTypes: %s", Arrays.toString(returnTypes.toArray()));
+
+		return returnTypes.get(0);
+	}
 
 	@Override
 	public Type visitFunDecl(FunDecl fd) {
+        if (fd.isPreDefined)
+            return fd.type;
+
 	    for (VarDecl vd : fd.params)
-	        visitVarDecl(vd);
-	    visitBlock(fd.block);
-        return null;
+	        vd.accept(this);
+
+	    Type returnType = fd.block.accept(this);
+	    if (returnType == null)
+            returnType = BaseType.VOID;
+
+        if (!isSameType(returnType, fd.type))
+            error("Function (%s) return type (%s) does not match, the return type of the Block (%s)", fd.name, fd.type, returnType);
+
+        return fd.type;
 	}
 
 
 	@Override
 	public Type visitProgram(Program p) {
+        Type returnType = BaseType.VOID;
+
 		for (StructTypeDecl std : p.structTypeDecls)
-			visitStructTypeDecl(std);
+			std.accept(this);
 		for (VarDecl vd : p.varDecls)
-			visitVarDecl(vd);
+			vd.accept(this);
 		for (FunDecl fd : p.funDecls)
-			visitFunDecl(fd);
-		return null;
+		    if (fd.name.equals("main"))
+		        returnType = fd.accept(this);
+		    else
+			    fd.accept(this);
+
+        return returnType;
 	}
 
 	@Override
 	public Type visitVarDecl(VarDecl vd) {
-        return null;
+        if (vd.type == BaseType.VOID)
+            error("Cannot declare VOID variable %s", vd.varName);
+
+        return vd.type;
 	}
 
 	@Override
 	public Type visitVarExpr(VarExpr v) {
-	    try {
-            v.type = v.vd.type;
-            return v.type;
-        } catch (Exception e) { return null; }
+        v.type = v.vd.type;
+        return v.type;
 	}
 
 	@Override
 	public Type visitFunCallExpr(FunCallExpr fc) {
-	    /*try {
-            if (fc.fd.params.size() != fc.params.size()) {
-                error("Invalid number of parameters");
-                return null;
+        if (fc.fd == null) {
+            error("Could not perform funcall %s%s, %s %s because it has not been declared!", fc.name, Arrays.toString(fc.params.toArray()), fc.name);
+            return BaseType.VOID;
+        }
+
+        fc.type = fc.fd.type;
+
+        if (fc.params.size() != fc.fd.params.size()) {
+            error("Could not call %s, expected %d arguments, but received %d", fc.fd.name, fc.fd.params.size(), fc.params.size());
+            return fc.type;
+        }
+
+        for (int i = 0; i < fc.params.size(); i++) {
+            Expr arg = fc.params.get(i);
+            VarDecl param = fc.fd.params.get(i);
+
+            Type argType = arg.accept(this);
+            if (!isSameType(argType, param.type)) {
+                error("Could not call %s, param `%s` was incorrectly given type %s", fc.fd, param, argType);
             }
-            for (int i = 0; i < fc.params.size(); i++) {
-                Type paramType = fc.params.get(i).accept(this);
-                if (fc.fd.params.get(i).type != paramType) {
-                    error("Invalid Type of parameter " + fc.fd.params.get(i).varName);
-                    return null;
-                }
-            }
-            fc.type = fc.fd.type;
-            return fc.fd.type;
-        } catch (Exception e) { return null; }*/
-	    try {
-	        return fc.fd.type;
-        } catch (Exception e) { return null; }
+        }
+
+        return fc.type;
 	}
 
 	@Override
 	public Type visitStructType(StructType st) {
-		// To be completed...
-		return null;
+		return st;
 	}
 
 	@Override
 	public Type visitPointerType(PointerType pt) {
-		// To be completed...
-		return null;
+        pt.type.accept(this);
+		return pt;
 	}
 
 	@Override
 	public Type visitArrayType(ArrayType at) {
-		// To be completed...
-		return null;
+		return at;
 	}
-
-    public Type visitExpression(Expr expression) {
-        switch (expression.getClass().getSimpleName()) {
-            case "IntLiteral": {
-                return visitIntLiteral((IntLiteral) expression);
-            }
-            case "StrLiteral": {
-                return visitStrLiteral((StrLiteral) expression);
-            }
-            case "ChrLiteral": {
-                return visitChrLiteral((ChrLiteral) expression);
-            }
-            case "VarExpr": {
-                return visitVarExpr((VarExpr) expression);
-            }
-            case "FunCallExpr": {
-                return visitFunCallExpr((FunCallExpr) expression);
-            }
-            case "BinOp": {
-                return visitBinOp((BinOp) expression);
-            }
-            case "ArrayAccessExpr": {
-                return visitArrayAccessExpr((ArrayAccessExpr) expression);
-            }
-            case "FieldAccessExpr": {
-                return visitFieldAccessExpr((FieldAccessExpr) expression);
-            }
-            case "ValueAtExpr": {
-                return visitValueAtExpr((ValueAtExpr) expression);
-            }
-            case "SizeOfExpr": {
-                return visitSizeOfExpr((SizeOfExpr) expression);
-            }
-            case "TypecastExpr": {
-                return visitTypecastExpr((TypecastExpr) expression);
-            }
-        }
-        return null;
-    }
 
 	@Override
 	public Type visitIntLiteral(IntLiteral il) {
 	    il.type = BaseType.INT;
-		return BaseType.INT;
+		return il.type;
 	}
 
 	@Override
 	public Type visitStrLiteral(StrLiteral sl) {
-	    sl.type = BaseType.CHAR;
-		return new PointerType(BaseType.CHAR);
+	    sl.type = new ArrayType(BaseType.CHAR, sl.value.length() + 1);
+		return sl.type;
 	}
 
 	@Override
 	public Type visitChrLiteral(ChrLiteral cl) {
 	    cl.type = BaseType.CHAR;
-		return BaseType.CHAR;
+		return cl.type;
 	}
 
 	@Override
 	public Type visitBinOp(BinOp bo) {
-	    try {
-            Type lhsT = bo.lhs.accept(this);
-            Type rhsT = bo.rhs.accept(this);
-            switch (bo.op) {
-                case ADD:
-                case SUB:
-                case MUL:
-                case DIV:
-                case MOD:
-                case OR:
-                case AND:
-                case GT:
-                case LT:
-                case GE:
-                case LE: {
-                    if (lhsT.equals(BaseType.INT) && rhsT.equals(BaseType.INT)) {
-                        bo.type = BaseType.INT;
-                        return BaseType.INT;
-                    } else {
-                        error("INVALID TYPES FOR THIS OPERATION(" + bo.op.toString() + "): lhsT = " + lhsT.toString() + ", rhsT = " + rhsT.toString());
-                        return null;
-                    }
-                }
-                case EQ:
-                case NE: {
-                    if ((lhsT.getClass().equals(StructType.class) || lhsT.getClass().equals(ArrayType.class) || lhsT.equals(BaseType.VOID)) || (rhsT.getClass().equals(StructType.class) || rhsT.getClass().equals(ArrayType.class) || rhsT.equals(BaseType.VOID))) {
-                        error("INVALID TYPES FOR THIS OPERATION(" + bo.op.toString() + "): lhsT = " + lhsT.toString() + ", rhsT = " + rhsT.toString());
-                        return null;
-                    } else if (!lhsT.getClass().getSimpleName().equals(rhsT.getClass().getSimpleName())) {
-                        error("TYPES DO NOT MATCH (" + bo.op.toString() + "): lhsT = " + lhsT.toString() + ", rhsT = " + rhsT.toString());
-                        return null;
-                    } else {
-                        bo.type = lhsT;
-                        return lhsT;
-                    }
-                }
-                default:
-                    error("INVALID OPERATION" + bo.op);
-                    return null;
+        Type lhsType = bo.lhs.accept(this);
+        Type rhsType = bo.rhs.accept(this);
+        bo.type = BaseType.INT;
+        switch (bo.op) {
+            case ADD:
+            case SUB:
+            case MUL:
+            case DIV:
+            case MOD:
+            case OR:
+            case AND:
+            case GT:
+            case LT:
+            case GE:
+            case LE: {
+                if (lhsType == BaseType.INT && rhsType == BaseType.INT)
+                    return bo.type.accept(this);
+                error("Operation %s expects INT and INT, but received %s and %s", bo.op, lhsType, rhsType);
+                return bo.type;
             }
-        } catch (Exception e) { return null; }
+            case EQ:
+            case NE: {
+                if (isSameType(lhsType, rhsType) && !(lhsType instanceof StructType) && !(lhsType instanceof ArrayType) && lhsType != BaseType.VOID)
+                    return bo.type.accept(this);
+                error("Operation %s expects matching BaseTypes, but received %s and %s", bo.op, lhsType, rhsType);
+                return bo.type;
+            }
+            default:
+                error("Invalid Operation" + bo.op);
+                return null;
+        }
 	}
 
 	@Override
 	public Type visitOp(Op o) {
-		// To be completed...
 		return null;
 	}
 
 	@Override
 	public Type visitArrayAccessExpr(ArrayAccessExpr aa) {
-		if (!aa.index.accept(this).equals(BaseType.INT)) {
-		    error("Invalid array index");
-		    return null;
+        Type exprType = aa.name.accept(this);
+        Type indexType = aa.index.accept(this);
+
+        if (indexType != BaseType.INT)
+            error("Expected INT, but received %s", indexType);
+
+        if (!(exprType instanceof ArrayType) && !(exprType instanceof PointerType)) {
+            error("Expected ArrayType or PointerType, but received %s", exprType);
+            return exprType;
         }
-		if (!aa.name.accept(this).getClass().equals(ArrayType.class) && !aa.name.accept(this).getClass().equals(PointerType.class)) {
-            error("Invalid type of array");
-            return null;
-        }
-		return aa.name.accept(this);
+
+        Type returnType;
+        if (exprType instanceof ArrayType)
+            returnType = ((ArrayType) exprType).type;
+        else
+            returnType = ((PointerType) exprType).type;
+
+        aa.type = returnType;
+        return aa.type.accept(this);
 	}
 
 	@Override
 	public Type visitFieldAccessExpr(FieldAccessExpr fa) {
-		// To be completed...
-		return null;
+        Type exprType = fa.name.accept(this);
+
+        if (!(exprType instanceof StructType)) {
+            error("Expression is not a struct");
+            return BaseType.VOID;
+        }
+
+        StructTypeDecl std = ((StructType) exprType).std;
+        VarDecl varDecl = null;
+        for (VarDecl vd : std.variables) {
+            if (vd.varName.equals(fa.field)) {
+                varDecl = vd;
+                break;
+            }
+        }
+
+        if (varDecl == null) {
+            error("Field %s does not exist in struct", fa.field);
+            return BaseType.VOID;
+        }
+
+        fa.type = varDecl.type.accept(this);
+        return fa.type;
 	}
 
 	@Override
 	public Type visitValueAtExpr(ValueAtExpr va) {
-        if (!va.expression.accept(this).getClass().equals(PointerType.class)) {
-            error("Invalid ValueAt Type");
-            return null;
+        Type pointerType = va.expression.accept(this);
+        if (!(pointerType instanceof PointerType)) {
+            error("Expression %s should be PointerType, but received %s", va, pointerType);
+            va.type = BaseType.VOID;
+            return va.type;
         }
-        va.type = va.expression.accept(this);
-		return va.type;
+
+        va.type = ((PointerType) pointerType).type;
+        return va.type;
 	}
 
 	@Override
 	public Type visitSizeOfExpr(SizeOfExpr so) {
-		return BaseType.INT;
+	    so.type = BaseType.INT;
+		return so.type;
 	}
 
 	@Override
 	public Type visitTypecastExpr(TypecastExpr tc) {
-        visitExpression(tc.expression);
-        tc.expression.type = tc.expression.accept(this);
-		return tc.type;
+        Type castToType = tc.castType;
+        Type castFromType = tc.expression.accept(this);
+
+        boolean isCastValid = false;
+
+        if (castFromType == BaseType.CHAR && castToType == BaseType.INT) {
+            isCastValid = true;
+        } else if (castFromType instanceof ArrayType && castToType instanceof PointerType) {
+            ArrayType castFrom = (ArrayType) castFromType;
+            PointerType castTo = (PointerType) castToType;
+            isCastValid = isSameType(castFrom.type, castTo.type);
+        } else if (castFromType instanceof PointerType && castToType instanceof PointerType) {
+            isCastValid = true;
+        }
+
+        if (!isCastValid)
+            error("Invalid cast from %s to %s", castFromType, castToType);
+
+        tc.type = castToType;
+        return tc.type;
 	}
 
 	@Override
 	public Type visitExprStmt(ExprStmt es) {
-        visitExpression(es.expression);
-        es.expression.type = es.expression.accept(this);
-		return es.expression.type;
+        return es.expression.accept(this);
 	}
 
 	@Override
 	public Type visitWhile(While w) {
-	    try {
-            if (!w.expression.accept(this).equals(BaseType.INT)){
-                error("Invalid while expression");
-            }
-            visitStatement(w.statement);
-        } catch (Exception ignored) {}
-		return null;
+        Type expr = w.expression.accept(this);
+        if (expr != BaseType.INT)
+            error("Expression should be of type INT but received %s", expr);
+
+        Type returnType = w.statement.accept(this);
+
+        if (isReturnable(w.statement))
+            return returnType;
+        else
+            return null;
 	}
 
 	@Override
 	public Type visitIf(If i) {
-	    try {
-            if (!i.expression.accept(this).equals(BaseType.INT)){
-                error("Invalid If expression");
-            }
-            visitStatement(i.ifStatement);
-            if (i.elseStatement != null)
-                visitStatement(i.elseStatement);
-        } catch (Exception ignored) {}
+        Type exprType = i.expression.accept(this);
+        if (exprType != BaseType.INT)
+            error("Expression should be of type INT, but received %s", exprType);
 
-		return null;
+        Type ifStatementType = i.ifStatement.accept(this);
+
+        Type returnType;
+        if (isReturnable(i.ifStatement))
+            returnType = ifStatementType;
+        else
+            return null;
+
+        if (i.elseStatement != null) {
+            Type elseStatementType = i.elseStatement.accept(this);
+
+            if (elseStatementType != null) {
+                if (returnType == null && isReturnable(i.elseStatement))
+                    returnType = elseStatementType;
+                else if (isReturnable(i.elseStatement) && !isSameType(ifStatementType, elseStatementType))
+                    error("ifStatement (%s) and elseStatement (%s) return different types", ifStatementType, elseStatementType);
+            }
+        }
+
+        return returnType;
 	}
 
 	@Override
 	public Type visitAssign(Assign a) {
-	    return null;
-	    /*
-	    try {
-            Type lhsT = a.lhs.accept(this);
-            Type rhsT = a.rhs.accept(this);
-            if (lhsT != rhsT) {
-                error("Incorrect assign type");
-                return null;
-            } else {
-                return lhsT;
-            }
-        } catch (Exception e) { return null; }*/
+        Expr lhsExpr = a.lhs;
+        if (!(lhsExpr instanceof VarExpr || lhsExpr instanceof FieldAccessExpr || lhsExpr instanceof ArrayAccessExpr || lhsExpr instanceof ValueAtExpr)) {
+            error("lhs cannot be %s", a.lhs);
+        }
+
+        Type lhsType = a.lhs.accept(this);
+        Type rhsType = a.rhs.accept(this);
+
+        if (lhsType == BaseType.VOID || lhsType instanceof ArrayType) {
+            error("lhs cannot be %s", lhsType);
+        }
+
+        if (!isSameType(lhsType, rhsType)) {
+            error("lhsType (%s) and rhsType (%s) do not match", lhsType, rhsType);
+        }
+
+        return null;
 	}
 
 	@Override
 	public Type visitReturn(Return r) {
-		// To be completed...
-		return null;
+        if (r.expression == null) {
+            return BaseType.VOID;
+        }
+        return r.expression.accept(this);
 	}
-
-	// To be completed...
-
 
 }

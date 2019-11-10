@@ -11,7 +11,13 @@ public class Return extends Stmt {
         this.expression = null;
     }
 
-    public <T> T accept(ASTVisitor<T> v) {
-        return v.visitReturn(this);
+    public <T> T accept(ASTVisitor<T> v) { return v.visitReturn(this); }
+
+    @Override
+    public String toString() {
+        if (expression == null) {
+            return "return;";
+        }
+        return "return " + expression.toString() + ";";
     }
 }
