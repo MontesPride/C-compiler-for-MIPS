@@ -155,7 +155,7 @@ public class ASTPrinter implements ASTVisitor<Void> {
     @Override
     public Void visitStrLiteral(StrLiteral sl) {
         writer.print("StrLiteral(");
-        writer.print(sl.value);
+        writer.print(sl.toString());
         writer.print(")");
         return null;
     }
@@ -163,7 +163,7 @@ public class ASTPrinter implements ASTVisitor<Void> {
     @Override
     public Void visitChrLiteral(ChrLiteral cl) {
         writer.print("ChrLiteral(");
-        writer.print(cl.value);
+        writer.print(cl.toString());
         writer.print(")");
         return null;
     }
@@ -216,7 +216,7 @@ public class ASTPrinter implements ASTVisitor<Void> {
     @Override
     public Void visitSizeOfExpr(SizeOfExpr so) {
         writer.print("SizeOfExpr(");
-        so.type.accept(this);
+        so.sizeOfType.accept(this);
         writer.print(")");
         return null;
     }
@@ -224,7 +224,7 @@ public class ASTPrinter implements ASTVisitor<Void> {
     @Override
     public Void visitTypecastExpr(TypecastExpr tc) {
         writer.print("TypecastExpr(");
-        tc.type.accept(this);
+        tc.castType.accept(this);
         writer.print(",");
         tc.expression.accept(this);
         writer.print(")");

@@ -583,7 +583,7 @@ public class Parser {
     }
 
     private Expr parseExpression_3() {
-        Expr lhs = parseExpression_1_2();
+        Expr lhs = parseExpression_2();
         if (accept(TokenClass.ASTERIX, TokenClass.DIV, TokenClass.REM)) {
             Op op;
             switch (token.tokenClass) {
@@ -607,6 +607,71 @@ public class Parser {
             return new BinOp(lhs, op, rhs);
         }
         return lhs;
+    }
+
+    private Expr parseExpression_2() {
+        if (accept(TokenClass.SIZEOF)) {
+            return parseSizeOf();
+        } else if (accept(TokenClass.ASTERIX)) {
+            return parseValueAt();
+        } else if (accept(TokenClass.LPAR)) {
+            if (lookAhead(1).tokenClass.equals(TokenClass.INT) || lookAhead(1).tokenClass.equals(TokenClass.VOID) || lookAhead(1).tokenClass.equals(TokenClass.CHAR) || lookAhead(1).tokenClass.equals(TokenClass.STRUCT))
+                return parseTypeCast();
+            else
+                return parseExpression_1();
+        } else if (accept(TokenClass.MINUS)) {
+            expect(TokenClass.MINUS);
+            return new BinOp(new IntLiteral(0), Op.SUB, parseExpression_2());
+        } else {
+            return parseExpression_1();
+        }
+    }
+
+    private Expr parseExpression_1() {
+        Expr lhs = parseExpression_0();
+
+        while (accept(TokenClass.DOT, TokenClass.LSBR)) {
+            if (accept(TokenClass.DOT)) {
+                return parseFieldAccess(lhs);
+            } else if (accept(TokenClass.LSBR)) {
+                return parseArrayAccess(lhs);
+            }
+        }
+        return lhs;
+    }
+
+    private Expr parseExpression_0() {
+        String tokenData = token.data;
+
+        if (accept(TokenClass.LPAR)) {
+            expect(TokenClass.LPAR);
+            Expr expression = parseExpression();
+            expect(TokenClass.RPAR);
+            return expression;
+        } else if (accept(TokenClass.IDENTIFIER)) {
+            if (lookAhead(1).tokenClass.equals(TokenClass.LPAR))
+                return parseFuncCall();
+            expect(TokenClass.IDENTIFIER);
+            return new VarExpr(tokenData);
+        }
+
+        if (accept(TokenClass.INT_LITERAL)) {
+            expect(TokenClass.INT_LITERAL);
+            return new IntLiteral(Integer.parseInt(tokenData));
+        }
+        if (accept(TokenClass.CHAR_LITERAL)) {
+            expect(TokenClass.CHAR_LITERAL);
+            return new ChrLiteral(tokenData.charAt(0));
+        }
+        if (accept(TokenClass.STRING_LITERAL)) {
+            expect(TokenClass.STRING_LITERAL);
+            return new StrLiteral(tokenData);
+        }
+
+        // It should never reach here
+        expect(TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL);
+        // return dummy StrLiteral
+        return new StrLiteral("");
     }
 
     private Expr parseExpression_1_2() {
