@@ -45,9 +45,9 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
         Symbol s = scope.lookupCurrent(name, isStructSymbol);
         if (s != null) {
             error("Symbol %s has been declared!\n", name);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public <S extends Symbol> S getSymbol(String name, Class<S> symbolClass, boolean isStructSymbol) {
@@ -71,7 +71,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     @Override
     public Void visitStructTypeDecl(StructTypeDecl sts) {
-        if (!putSymbol(sts.structType.name, true))
+        if (putSymbol(sts.structType.name, true))
             return null;
 
         scope.put(new StructTypeSymbol(sts), true);
@@ -114,7 +114,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     @Override
     public Void visitFunDecl(FunDecl fd) {
-        if (!putSymbol(fd.name, false)) {
+        if (putSymbol(fd.name, false)) {
             return null;
         }
 
@@ -146,7 +146,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
     @Override
     public Void visitVarDecl(VarDecl vd) {
-        if (!putSymbol(vd.varName, false)) {
+        if (putSymbol(vd.varName, false)) {
             return null;
         }
 
@@ -164,9 +164,8 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
             v.vd = s.vd;
 
         // Avoid possible NullPointerExceptions
-        if (v.vd == null) {
+        if (v.vd == null)
             v.vd = new VarDecl(BaseType.VOID, v.name);
-        }
 
         return null;
     }
@@ -179,10 +178,8 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
             fc.fd = s.fd;
 
         // Avoid possible NullPointerExceptions
-        if (fc.fd == null) {
-            List empty = Collections.emptyList();
+        if (fc.fd == null)
             fc.fd = new FunDecl(BaseType.VOID, fc.name, new ArrayList<>(), new Block(new ArrayList<>(), new ArrayList<>()));
-        }
 
         for (Expr e : fc.params)
             e.accept(this);
@@ -198,9 +195,8 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
             st.std = s.std;
 
         // Avoid possible NullPointerExceptions
-        if (st.std == null) {
+        if (st.std == null)
             st.std = new StructTypeDecl(new StructType(st.name), new ArrayList<>());
-        }
 
         return null;
     }
