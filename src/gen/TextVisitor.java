@@ -13,10 +13,10 @@ import static gen.CodeGenerator.allignTo4Bytes;
 public class TextVisitor extends CodeGeneratorVisitor<Register> {
     private OutputWriter writer;
 
-    private PrefixAdder funcPrefix = new PrefixAdder("func");
-    private PrefixAdder binopPrefix = new PrefixAdder("binop");
-    private PrefixAdder ifPrefix = new PrefixAdder("if");
-    private PrefixAdder whilePrefix = new PrefixAdder("while");
+    private Labeller funcLabel = new Labeller("func");
+    private Labeller binopLabel = new Labeller("binop");
+    private Labeller ifLabel = new Labeller("if");
+    private Labeller whileLabel = new Labeller("while");
 
     private int frameOffset = 0;
     private final static int prologueSize = 4 * Register.savedRegisters.size();
@@ -87,7 +87,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
 
     // save registers
     private void saveRegisters() {
-        writer.comment("snapshot registers");
+        writer.comment("save registers");
         try (OutputWriter scope = writer.scope()) {
             writer.comment("Adjust $sp for prologue");
             Register.sp.sub(prologueSize);
@@ -113,6 +113,21 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         }
     }
 
+    // Establish which expression to addressOf
+    public Register addressOf(Expr expr) {
+        if (expr instanceof VarExpr) {
+            return addressOf((VarExpr) expr);
+        } else if (expr instanceof ArrayAccessExpr) {
+            return addressOf((ArrayAccessExpr) expr);
+        } else if (expr instanceof FieldAccessExpr) {
+            return addressOf((FieldAccessExpr) expr);
+        } else if (expr instanceof ValueAtExpr) {
+            return addressOf((ValueAtExpr) expr);
+        }
+        throw new RuntimeException("Received expression that that cannot be addressed - addressOf(" + expr.toString() + ")");
+    }
+
+    // get addressOf(ArrayAccessExpr)
     private Register addressOf(ArrayAccessExpr aa) {
         Register pointer = aa.name.accept(this);
 
@@ -126,6 +141,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         return pointer;
     }
 
+    // get addressOf(VarExpr)
     private Register addressOf(VarExpr v) {
         VarDecl varDecl = v.vd;
 
@@ -147,6 +163,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         return value;
     }
 
+    // get addressOf(FieldAccessExpr)
     private Register addressOf(FieldAccessExpr fa) {
         assert fa.name.type instanceof StructType;
 
@@ -167,7 +184,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
 
         // Offset the address by whichever amount
         StructType structType = (StructType) fa.name.type;
-        int offset = 0; // todo: only calculate this stuff once (also elsewhere in assign)
+        int offset = 0;
         for (VarDecl vd : structType.std.variables) {
             if (vd.varName.equals(fa.field)) {
                 address.add(offset);
@@ -180,6 +197,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         throw new RuntimeException("could not find field in: " + fa.toString());
     }
 
+    // get addressOf(ValueAtExpr)
     private Register addressOf(ValueAtExpr va) {
         assert va.expression.type instanceof PointerType;
         writer.comment(va);
@@ -193,19 +211,6 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
             // This is what the above load word has done
             return locationOfPointer;
         }
-    }
-
-    public Register addressOf(Expr expr) {
-        if (expr instanceof VarExpr) {
-            return addressOf((VarExpr) expr);
-        } else if (expr instanceof ArrayAccessExpr) {
-            return addressOf((ArrayAccessExpr) expr);
-        } else if (expr instanceof FieldAccessExpr) {
-            return addressOf((FieldAccessExpr) expr);
-        } else if (expr instanceof ValueAtExpr) {
-            return addressOf((ValueAtExpr) expr);
-        }
-        throw new RuntimeException("Got expression that I don't know how to addressOf - " + expr.toString());
     }
 
     // Get value of a certain type stored at this address
@@ -223,7 +228,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         } else if (type == BaseType.VOID) {
             writer.nop();
         } else {
-            throw new RuntimeException("getValue not implemented with type " + type.toString());
+            throw new RuntimeException("getValue can't be used with type " + type.toString());
         }
 
         return value;
@@ -296,9 +301,9 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         Register result = Helper.registers.get();
 
         // Generate a "false", "true", "end" label ahead of time
-        String falsePrefix = binopPrefix.num("and_false");
-        String truePrefix = binopPrefix.num("and_true");
-        String finishPrefix = binopPrefix.num("and_finish");
+        String falsePrefix = binopLabel.enumLabel("and_false");
+        String truePrefix = binopLabel.enumLabel("and_true");
+        String finishPrefix = binopLabel.enumLabel("and_finish");
 
         // Plan:
         // - jump to FALSE if X fails, otherwise continue (jump to CHECK_Y)
@@ -317,14 +322,14 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         }
 
         // FALSE: Set result to 0, jump to finish
-        writer.withPrefix(falsePrefix).li(result, 0);
+        writer.withLabel(falsePrefix).li(result, 0);
         writer.b(finishPrefix);
 
         // TRUE : Set result to 1
-        writer.withPrefix(truePrefix).li(result, 1);
+        writer.withLabel(truePrefix).li(result, 1);
 
         // Emit finish label
-        writer.withPrefix(finishPrefix).nop();
+        writer.withLabel(finishPrefix).nop();
 
         return result;
     }
@@ -334,9 +339,9 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         Register result = Helper.registers.get();
 
         // Generate a "false", "true", "end" label ahead of time
-        String falsePrefix = binopPrefix.num("or_false");
-        String truePrefix = binopPrefix.num("or_true");
-        String finishPrefix = binopPrefix.num("or_finish");
+        String falsePrefix = binopLabel.enumLabel("or_false");
+        String truePrefix = binopLabel.enumLabel("or_true");
+        String finishPrefix = binopLabel.enumLabel("or_finish");
 
         // Plan:
         // - jump to TRUE if X success, otherwise continue (jump to CHECK_Y)
@@ -355,14 +360,14 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         }
 
         // TRUE : Set result to 1, jump to finish
-        writer.withPrefix(truePrefix).li(result, 1);
+        writer.withLabel(truePrefix).li(result, 1);
         writer.b(finishPrefix);
 
         // FALSE: Set result to 0
-        writer.withPrefix(falsePrefix).li(result, 0);
+        writer.withLabel(falsePrefix).li(result, 0);
 
         // Emit finish label
-        writer.withPrefix(finishPrefix).nop();
+        writer.withLabel(finishPrefix).nop();
 
         return result;
     }
@@ -384,7 +389,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
 
         try (OutputWriter scope = writer.scope()) {
 
-            writer.withPrefix("main").newSection("globl %s", "main");
+            writer.withLabel("main").newSection("globl %s", "main");
             writer.jal("func_main_start");
             Register.paramRegs[0].set(Register.v0);
             Register.v0.loadImmediate(17);
@@ -418,10 +423,10 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
             return null;
         }
 
-        f.globalName = funcPrefix.addPrefix(f.name + "_start");
-        writer.withPrefix(f.globalName).comment("%s", f);
+        f.globalName = funcLabel.addLabel(f.name + "_start");
+        writer.withLabel(f.globalName).comment("%s", f);
 
-        String epilogueLabel = funcPrefix.addPrefix(f.name + "_epilogue");
+        String epilogueLabel = funcLabel.addLabel(f.name + "_epilogue");
 
         frameOffset = 0; // reset frame offset to 0 because we only care about it per function
         // Allocate space for arguments on stack
@@ -467,7 +472,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
                 Register.v0.loadImmediate(0);
             }
 
-            writer.withPrefix(epilogueLabel).comment("epilogue");
+            writer.withLabel(epilogueLabel).comment("epilogue");
             try (OutputWriter innerScope = writer.scope()) {
                 // Set stack pointer to our function's frame pointer
                 Register.sp.set(Register.fp);
@@ -559,23 +564,26 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
     }
 
     @Override
-    public Register visitReturn(Return r) {
-        writer.comment(r);
-        try (OutputWriter scope = writer.scope()) {
-            if (r.expression != null) {
-                try (Register value = r.expression.accept(this)) {
-                    writer.comment("Store return value at $v0");
-                    Register.v0.set(value);
-                }
-            } else {
-                writer.comment("Store default return value at $v0");
-                Register.v0.loadImmediate(0);
-            }
+    public Register visitIntLiteral(IntLiteral il) {
+        Register val = Helper.registers.get();
+        val.loadImmediate(il.value);
+        return val;
+    }
 
-            writer.comment("Jump to epilogue (defined at $ra)");
-            writer.jr(Register.ra);
-        }
-        return null;
+
+    @Override
+    public Register visitChrLiteral(ChrLiteral cl) {
+        Register val = Helper.registers.get();
+        writer.comment("%s = %s", val, cl.toString());
+        val.loadImmediate(cl.value);
+        return val;
+    }
+
+    @Override
+    public Register visitStrLiteral(StrLiteral sl) {
+        Register address = Helper.registers.get();
+        address.loadAddress(sl.globalName);
+        return address;
     }
 
     @Override
@@ -606,38 +614,6 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
     }
 
     @Override
-    public Register visitAssign(Assign a) {
-        writer.comment(a);
-        try (OutputWriter scope = writer.scope(); Register pointer = this.addressOf(a.lhs); Register value = a.rhs.accept(this)) {
-            storeValue(value, a.rhs.type, pointer, 0);
-        }
-        return null;
-    }
-
-    @Override
-    public Register visitIntLiteral(IntLiteral il) {
-        Register val = Helper.registers.get();
-        val.loadImmediate(il.value);
-        return val;
-    }
-
-
-    @Override
-    public Register visitChrLiteral(ChrLiteral cl) {
-        Register val = Helper.registers.get();
-        writer.comment("%s = %s", val, cl.toString());
-        val.loadImmediate(cl.value);
-        return val;
-    }
-
-    @Override
-    public Register visitStrLiteral(StrLiteral sl) {
-        Register address = Helper.registers.get();
-        address.loadAddress(sl.genName);
-        return address;
-    }
-
-    @Override
     public Register visitArrayAccessExpr(ArrayAccessExpr aa) { return visitAddressableExpr(aa); }
 
     @Override
@@ -650,17 +626,6 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
     public Register visitValueAtExpr(ValueAtExpr va) {
         assert va.expression.type instanceof PointerType;
         return visitAddressableExpr(va);
-    }
-
-    @Override
-    public Register visitTypecastExpr(TypecastExpr tc) {
-        // visitSizeOfExpr is a value, so we don't need to get addr
-        Register value;
-        writer.comment(tc);
-        try (OutputWriter scope = writer.scope()) {
-            value = tc.expression.accept(this);
-        }
-        return value;
     }
 
     @Override
@@ -677,58 +642,98 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
     }
 
     @Override
+    public Register visitTypecastExpr(TypecastExpr tc) {
+        // visitSizeOfExpr is a value, so we don't need to get addr
+        Register value;
+        writer.comment(tc);
+        try (OutputWriter scope = writer.scope()) {
+            value = tc.expression.accept(this);
+        }
+        return value;
+    }
+
+    @Override
     public Register visitExprStmt(ExprStmt es) {
         writer.comment(es);
         try (OutputWriter scope = writer.scope()) {
-            try (Register autoFreedRegisterThatCanBeNull = es.expression.accept(this)) {}
+            try (Register register = es.expression.accept(this)) {}
         }
         return null;
     }
 
     @Override
     public Register visitIf(If i) {
-        String endPrefix = ifPrefix.num("end");
-        String elsePrefix = (i.elseStatement == null) ? endPrefix : ifPrefix.num("else");
+        String endLabel = ifLabel.enumLabel("end");
+        String elseLabel = (i.elseStatement == null) ? endLabel : ifLabel.enumLabel("else");
 
         writer.comment("if (%s)", i.expression);
         try (OutputWriter scope = writer.scope(); Register shouldSkip = i.expression.accept(this)) {
-            writer.beqz(shouldSkip, elsePrefix);
+            writer.beqz(shouldSkip, elseLabel);
 
             i.ifStatement.accept(this);
 
-            writer.b(endPrefix);
+            writer.b(endLabel);
         }
 
         if (i.elseStatement == null) {
-            writer.withPrefix(endPrefix).nop();
+            writer.withLabel(endLabel).nop();
             return null;
         }
 
-        writer.withPrefix(elsePrefix).comment("else");
+        writer.withLabel(elseLabel).comment("else");
         try (OutputWriter scope = writer.scope()) {
             i.elseStatement.accept(this);
         }
 
-        writer.withPrefix(endPrefix).nop();
+        writer.withLabel(endLabel).nop();
 
         return null;
     }
 
     @Override
     public Register visitWhile(While w) {
-        String startPrefix = whilePrefix.num("this");
-        String endPrefix = whilePrefix.num("end");
+        String startLabel = whileLabel.enumLabel("begin");
+        String endLabel = whileLabel.enumLabel("end");
 
-        writer.withPrefix(startPrefix).comment("while (%s)", w.expression);
+        writer.withLabel(startLabel).comment("while (%s)", w.expression);
         try (OutputWriter scope = writer.scope(); Register shouldContinue = w.expression.accept(this)) {
-            writer.beqz(shouldContinue, endPrefix);
+            writer.beqz(shouldContinue, endLabel);
 
             w.statement.accept(this);
 
-            writer.b(startPrefix);
+            writer.b(startLabel);
         }
 
-        writer.withPrefix(endPrefix).nop();
+        writer.withLabel(endLabel).nop();
+        return null;
+    }
+
+    @Override
+    public Register visitAssign(Assign a) {
+        writer.comment(a);
+        try (OutputWriter scope = writer.scope(); Register pointer = this.addressOf(a.lhs); Register value = a.rhs.accept(this)) {
+            storeValue(value, a.rhs.type, pointer, 0);
+        }
+        return null;
+    }
+
+    @Override
+    public Register visitReturn(Return r) {
+        writer.comment(r);
+        try (OutputWriter scope = writer.scope()) {
+            if (r.expression != null) {
+                try (Register value = r.expression.accept(this)) {
+                    writer.comment("Store return value at $v0");
+                    Register.v0.set(value);
+                }
+            } else {
+                writer.comment("Store default return value at $v0");
+                Register.v0.loadImmediate(0);
+            }
+
+            writer.comment("Jump to epilogue (defined at $ra)");
+            writer.jr(Register.ra);
+        }
         return null;
     }
 

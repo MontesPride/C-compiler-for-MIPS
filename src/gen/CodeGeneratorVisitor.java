@@ -10,30 +10,10 @@ public abstract class CodeGeneratorVisitor<T> implements ASTVisitor<T> {
     }
 
     @Override
-    public T visitStructTypeDecl(StructTypeDecl st) {
-        st.structType.accept(this);
-        for (VarDecl vd : st.variables)
+    public T visitStructTypeDecl(StructTypeDecl std) {
+        std.structType.accept(this);
+        for (VarDecl vd : std.variables)
             vd.accept(this);
-
-        return null;
-    }
-
-    @Override
-    public T visitBlock(Block b) {
-        for (VarDecl vd : b.variables)
-            vd.accept(this);
-        for (Stmt stmt : b.statements)
-            stmt.accept(this);
-
-        return null;
-    }
-
-    @Override
-    public T visitFunDecl(FunDecl p) {
-        p.type.accept(this);
-        for (VarDecl vd : p.params)
-            vd.accept(this);
-        p.block.accept(this);
 
         return null;
     }
@@ -49,6 +29,27 @@ public abstract class CodeGeneratorVisitor<T> implements ASTVisitor<T> {
 
         return null;
     }
+
+    @Override
+    public T visitBlock(Block b) {
+        for (VarDecl vd : b.variables)
+            vd.accept(this);
+        for (Stmt stmt : b.statements)
+            stmt.accept(this);
+
+        return null;
+    }
+
+    @Override
+    public T visitFunDecl(FunDecl fd) {
+        fd.type.accept(this);
+        for (VarDecl vd : fd.params)
+            vd.accept(this);
+        fd.block.accept(this);
+
+        return null;
+    }
+
 
     @Override
     public T visitVarDecl(VarDecl vd) {
@@ -91,12 +92,12 @@ public abstract class CodeGeneratorVisitor<T> implements ASTVisitor<T> {
     }
 
     @Override
-    public T visitStrLiteral(StrLiteral sl) {
+    public T visitChrLiteral(ChrLiteral cl) {
         return null;
     }
 
     @Override
-    public T visitChrLiteral(ChrLiteral cl) {
+    public T visitStrLiteral(StrLiteral sl) {
         return null;
     }
 
