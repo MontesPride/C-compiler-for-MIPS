@@ -1,13 +1,13 @@
 package gen;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author sfilipiak
  */
-public class Register {
-
+public class Register implements AutoCloseable {
 
     /*
      * definition of registers
@@ -35,6 +35,29 @@ public class Register {
     public static final Register fp = new Register(30,"fp");
     public static final Register ra = new Register(31,"ra");
 
+    public static final Register[] unfreeable = {
+            // syscall register
+            v0,
+
+            // argument registers
+            paramRegs[0], paramRegs[1], paramRegs[2], paramRegs[3],
+
+            // pointers and return address
+            gp, sp, fp, ra,
+    };
+
+    public static final List<Register> savedRegisters = new ArrayList<>();
+    static {
+        // Add all temporaries and unfreeable
+        savedRegisters.addAll(tmpRegs);
+        savedRegisters.addAll(Arrays.asList(unfreeable));
+
+        // Remove stack pointer though
+        savedRegisters.remove(sp);
+
+        // And remove syscall
+        savedRegisters.remove(v0);
+    }
 
     private final int num;      // register number
     private final String name;  // register name
@@ -48,5 +71,48 @@ public class Register {
     public String toString() {
         return "$"+name;
     }
+
+    public void free() {
+        for (Register r : unfreeable) {
+            if (r == this) {
+                throw new RuntimeException("Attempted to free non-freeable register.");
+            }
+        }
+        Helper.registers.free(this);
+    }
+
+    // Allows try-with-resources to be used to free registers
+    @Override
+    public void close() {
+        free();
+    }
+
+    public void loadImmediate(int i) { Helper.writer.li(this, i); }
+
+    public void loadAddress(String label) { Helper.writer.la(this, label); }
+
+    public void loadByte(Register from, int offset) { Helper.writer.lb(this, from, offset); }
+
+    public void loadWord(Register from, int offset) { Helper.writer.lw(this, from, offset); }
+
+    public void storeByteAt(Register toAddress, int offset) { Helper.writer.sb(this, toAddress, offset); }
+
+    public void storeWordAt(Register toAddress, int offset) { Helper.writer.sw(this, toAddress, offset); }
+
+    public void set(Register from) { Helper.writer.move(this, from); }
+
+    public void moveTo(Register target) { Helper.writer.move(target, this); }
+
+    public void jump() { Helper.writer.jr(this); }
+
+    public void add(int i) { Helper.writer.add(this, this, i); }
+
+    public void add(Register y) { Helper.writer.add(this, this, y); }
+
+    public void sub(int i) { Helper.writer.sub(this, this, i); }
+
+    public void sub(Register subtract) { Helper.writer.sub(this, this, subtract); }
+
+    public void mul(int multiplier) { Helper.writer.mul(this, this, multiplier); }
 
 }
