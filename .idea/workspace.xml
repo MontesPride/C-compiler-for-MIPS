@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="TypeCheckVisitor fixed.">
+    <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="Parser is fixed (hopefully).">
+      <change afterPath="$PROJECT_DIR$/src/gen/AssignVisitor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/gen/CodeGeneratorVisitor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/gen/DataVisitor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/gen/OutputWriter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/gen/PrefixAdder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/gen/TextVisitor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/while_true.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ast/ASTPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/ASTPrinter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/ArrayType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/ArrayType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/BaseType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/BaseType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/PointerType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/PointerType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/StructType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/StructType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/Type.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/Type.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gen/CodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/CodeGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gen/Register.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/Register.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -72,7 +87,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Tictactoe-ast">
+  <component name="RunManager" selected="Application.while_true-gen">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -371,6 +386,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="while_true-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/while_true.c while_true.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -439,6 +462,7 @@
       <item itemvalue="Application.main-gen" />
       <item itemvalue="Application.main-ast" />
       <item itemvalue="Application.Fibonacci-gen" />
+      <item itemvalue="Application.while_true-gen" />
       <item itemvalue="Application.Fibonacci-sem" />
       <item itemvalue="Application.Tictactoe-sem" />
       <item itemvalue="Application.myTest-sem" />
@@ -699,7 +723,21 @@
       <option name="project" value="LOCAL" />
       <updated>1573403310855</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Parser is fixed (hopefully).">
+      <created>1573421560678</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1573421560678</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Removed no longer used functions.">
+      <created>1573421642051</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1573421642052</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -716,8 +754,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Lexer is fully working now. Still not sure if the #include parsing is correct on piazza. Gcc compiler acts differently to what was said." />
-    <MESSAGE value="Fixed #include to work as it was explained on piazza." />
     <MESSAGE value="Fixed the identifier definition" />
     <MESSAGE value="Initial version of a parser. Passes fibonacci and tictactoe sample tests. I am curious to see how it does with the scoreboard tests." />
     <MESSAGE value="struct declaration fix" />
@@ -741,7 +777,9 @@
     <MESSAGE value="Part3 initial commit" />
     <MESSAGE value="NameAnalysisVisitor fixed." />
     <MESSAGE value="TypeCheckVisitor fixed." />
-    <option name="LAST_COMMIT_MESSAGE" value="TypeCheckVisitor fixed." />
+    <MESSAGE value="Parser is fixed (hopefully)." />
+    <MESSAGE value="Removed no longer used functions." />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed no longer used functions." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
