@@ -8,6 +8,7 @@ public class FunDecl implements ASTNode {
     public final List<VarDecl> params;
     public final Block block;
     public final boolean isPreDefined;
+    public String globalName = null;
 
     public FunDecl(Type type, String name, List<VarDecl> params, Block block) {
         this.type = type;

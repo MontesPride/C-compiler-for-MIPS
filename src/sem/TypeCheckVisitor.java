@@ -329,7 +329,7 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
         if (isReturnable(i.ifStatement))
             returnType = ifStatementType;
         else
-            return null;
+            returnType =  null;
 
         if (i.elseStatement != null) {
             Type elseStatementType = i.elseStatement.accept(this);
