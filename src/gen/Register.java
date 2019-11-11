@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author cdubach
+ * @author sfilipiak
  */
 public class Register {
 

@@ -10,6 +10,8 @@ import java.util.Stack;
 
 public class CodeGenerator implements ASTVisitor<Register> {
 
+    public static int allignTo4Bytes(int size) { return (size + 3) / 4 * 4; }
+
     /*
      * Simple register allocator.
      */
@@ -31,16 +33,9 @@ public class CodeGenerator implements ASTVisitor<Register> {
         }
     }
 
-    private void freeRegister(Register reg) {
-        freeRegs.push(reg);
-    }
-
-
-
-
+    private void freeRegister(Register reg) { freeRegs.push(reg); }
 
     private PrintWriter writer; // use this writer to output the assembly instructions
-
 
     public void emitProgram(Program program, File outputFile) throws FileNotFoundException {
         writer = new PrintWriter(outputFile);

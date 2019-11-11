@@ -12,4 +12,6 @@ public class PointerType implements Type {
     @Override
     public String toString() { return "*" + type.toString(); }
 
+    @Override
+    public int sizeOf() { return BaseType.INT.sizeOf(); }
 }
