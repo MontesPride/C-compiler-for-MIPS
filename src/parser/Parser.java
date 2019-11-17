@@ -485,29 +485,29 @@ public class Parser {
 
     private Expr parseExpression_8() {
         Expr lhs = parseExpression_7();
-        if (accept(TokenClass.OR)) {
+        while (accept(TokenClass.OR)) {
             Op op = Op.OR;
             nextToken();
-            Expr rhs = parseExpression_8();
-            return new BinOp(lhs, op, rhs);
+            Expr rhs = parseExpression_7();
+            lhs = new BinOp(lhs, op, rhs);
         }
         return lhs;
     }
 
     private Expr parseExpression_7() {
         Expr lhs = parseExpression_6();
-        if (accept(TokenClass.AND)) {
+        while (accept(TokenClass.AND)) {
             Op op = Op.AND;
             nextToken();
-            Expr rhs = parseExpression_7();
-            return new BinOp(lhs, op, rhs);
+            Expr rhs = parseExpression_6();
+            lhs = new BinOp(lhs, op, rhs);
         }
         return lhs;
     }
 
     private Expr parseExpression_6() {
         Expr lhs = parseExpression_5();
-        if (accept(TokenClass.EQ, TokenClass.NE)) {
+        while (accept(TokenClass.EQ, TokenClass.NE)) {
             Op op;
             switch (token.tokenClass) {
                 case EQ: {
@@ -522,15 +522,15 @@ public class Parser {
                     op = null;
             }
             nextToken();
-            Expr rhs = parseExpression_6();
-            return new BinOp(lhs, op, rhs);
+            Expr rhs = parseExpression_5();
+            lhs = new BinOp(lhs, op, rhs);
         }
         return lhs;
     }
 
     private Expr parseExpression_5() {
         Expr lhs = parseExpression_4();
-        if (accept(TokenClass.GT, TokenClass.LT, TokenClass.GE, TokenClass.LE)) {
+        while (accept(TokenClass.GT, TokenClass.LT, TokenClass.GE, TokenClass.LE)) {
             Op op;
             switch (token.tokenClass) {
                 case GT: {
@@ -553,15 +553,15 @@ public class Parser {
                     op = null;
             }
             nextToken();
-            Expr rhs = parseExpression_5();
-            return new BinOp(lhs, op, rhs);
+            Expr rhs = parseExpression_4();
+            lhs = new BinOp(lhs, op, rhs);
         }
         return lhs;
     }
 
     private Expr parseExpression_4() {
         Expr lhs = parseExpression_3();
-        if (accept(TokenClass.PLUS, TokenClass.MINUS)) {
+        while (accept(TokenClass.PLUS, TokenClass.MINUS)) {
             Op op;
             switch (token.tokenClass) {
                 case PLUS: {
@@ -576,15 +576,15 @@ public class Parser {
                     op = null;
             }
             nextToken();
-            Expr rhs = parseExpression_4();
-            return new BinOp(lhs, op, rhs);
+            Expr rhs = parseExpression_3();
+            lhs = new BinOp(lhs, op, rhs);
         }
         return lhs;
     }
 
     private Expr parseExpression_3() {
         Expr lhs = parseExpression_2();
-        if (accept(TokenClass.ASTERIX, TokenClass.DIV, TokenClass.REM)) {
+        while (accept(TokenClass.ASTERIX, TokenClass.DIV, TokenClass.REM)) {
             Op op;
             switch (token.tokenClass) {
                 case ASTERIX: {
@@ -603,8 +603,8 @@ public class Parser {
                     op = null;
             }
             nextToken();
-            Expr rhs = parseExpression_3();
-            return new BinOp(lhs, op, rhs);
+            Expr rhs = parseExpression_2();
+            lhs = new BinOp(lhs, op, rhs);
         }
         return lhs;
     }

@@ -5,11 +5,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gen/OutputWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/OutputWriter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gen/Register.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/Register.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gen/TextVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/TextVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fibonacci.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fibonacci.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/my_valid_test.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/my_valid_test.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -403,10 +400,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="my_valid_test-ast" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-ast tests/my_valid_test.c my_valid_test.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="my_valid_test-gen" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="ct-19-20" />
       <option name="PROGRAM_PARAMETERS" value="-gen tests/my_valid_test.c my_valid_test.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="my_valid_test-parser" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-parser tests/my_valid_test.c my_valid_test.out" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -488,6 +501,8 @@
       <item itemvalue="Application.main-ast" />
       <item itemvalue="Application.Fibonacci-gen" />
       <item itemvalue="Application.my_valid_test-gen" />
+      <item itemvalue="Application.my_valid_test-parser" />
+      <item itemvalue="Application.my_valid_test-ast" />
       <item itemvalue="Application.hello_world-gen" />
       <item itemvalue="Application.f.param.1-parser" />
       <item itemvalue="Application.f.param.2-parser" />
@@ -794,7 +809,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573507416932</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Minor cosmetic fixes. There is still one bug in the parser that I am unable to find :/">
+      <created>1574006471891</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1574006471891</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -811,7 +833,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Minor stylistic fixes. Ready for overnight test." />
     <MESSAGE value="Fixes: Struct declaration," />
     <MESSAGE value="Fixed struct declaration." />
     <MESSAGE value="Fixed multi line comment. (Now /*/ doesnt pass as a start and an end of a comment)" />
@@ -836,7 +857,8 @@
     <MESSAGE value="TypeChecker mega fix." />
     <MESSAGE value="typo fix." />
     <MESSAGE value="Initial testing of part 3." />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial testing of part 3." />
+    <MESSAGE value="Minor cosmetic fixes. There is still one bug in the parser that I am unable to find :/" />
+    <option name="LAST_COMMIT_MESSAGE" value="Minor cosmetic fixes. There is still one bug in the parser that I am unable to find :/" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
