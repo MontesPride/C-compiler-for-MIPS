@@ -563,25 +563,25 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
 
     @Override
     public Register visitIntLiteral(IntLiteral il) {
-        Register val = Helper.registers.get();
-        val.loadImmediate(il.value);
-        return val;
+        Register register = Helper.registers.get();
+        register.loadImmediate(il.value);
+        return register;
     }
 
 
     @Override
     public Register visitChrLiteral(ChrLiteral cl) {
-        Register val = Helper.registers.get();
-        writer.comment("%s = %s", val, cl.toString());
-        val.loadImmediate(cl.value);
-        return val;
+        Register register = Helper.registers.get();
+        writer.comment("%s = %s", register, cl.toString());
+        register.loadImmediate(cl.value);
+        return register;
     }
 
     @Override
     public Register visitStrLiteral(StrLiteral sl) {
-        Register address = Helper.registers.get();
-        address.loadAddress(sl.globalName);
-        return address;
+        Register register = Helper.registers.get();
+        register.loadAddress(sl.globalName);
+        return register;
     }
 
     @Override
