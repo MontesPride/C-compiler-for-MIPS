@@ -93,7 +93,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
             Register.sp.sub(prologueSize);
 
             int i = 0;
-            for (Register r: Register.savedRegisters) {
+            for (Register r : Register.savedRegisters) {
                 writer.sw(r, Register.sp, i);
                 i += 4;
             }
@@ -234,12 +234,12 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         return value;
     }
 
-    public void storeValue(Register sourceValue, Type type, Register targetAddress, int offset) {
-        writer.comment("(%s + %d) = valueOf(%s, %s)", targetAddress, offset, sourceValue, type);
+    public void storeValue(Register lhsRegister, Type type, Register rhsRegister, int offset) {
+        writer.comment("(%s + %d) = valueOf(%s, %s)", rhsRegister, offset, lhsRegister, type);
         if (type == BaseType.CHAR) {
-            sourceValue.storeByteAt(targetAddress, offset);
+            lhsRegister.storeByteAt(rhsRegister, offset);
         } else if (type == BaseType.INT || type instanceof PointerType) {
-            sourceValue.storeWordAt(targetAddress, offset);
+            lhsRegister.storeWordAt(rhsRegister, offset);
         } else if (type instanceof StructType) {
 
             // Note, sourceValue is actually referring to the struct's address
@@ -251,19 +251,19 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
                 int totalSize = 0;
                 for (VarDecl vd : std.variables) {
                     // Read the value at the struct address (which may or may not have been incremented)
-                    try (Register innerSourceValue = getValue(sourceValue, vd.type)) {
-                        storeValue(innerSourceValue, vd.type, targetAddress, offset);
+                    try (Register innerSourceValue = getValue(lhsRegister, vd.type)) {
+                        storeValue(innerSourceValue, vd.type, rhsRegister, offset);
                     }
 
                     // Increment our read offset and struct address by the size we've just read
                     int size = allignTo4Bytes(vd.type.sizeOf());
-                    sourceValue.add(size);
+                    lhsRegister.add(size);
                     offset += size;
                     totalSize += size;
                 }
 
                 // Restore sourceValue to original address
-                sourceValue.sub(totalSize);
+                lhsRegister.sub(totalSize);
             }
         } else {
             throw new RuntimeException("storeValue hasn't been implemented for type: " + type.toString());
@@ -296,78 +296,78 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         return result;
     }
 
-    private Register and(Register x, Expr yExpr) {
+    private Register and(Register lhs, Expr rhsExpr) {
         // Generate a result register
         Register result = Helper.registers.get();
 
-        // Generate a "false", "true", "end" label ahead of time
-        String falsePrefix = binopLabel.enumLabel("and_false");
-        String truePrefix = binopLabel.enumLabel("and_true");
-        String finishPrefix = binopLabel.enumLabel("and_finish");
+        // Generate labels with "false", "true", "end" sufixes ahead of time
+        String falseSufix = binopLabel.enumLabel("and_false");
+        String trueSufix = binopLabel.enumLabel("and_true");
+        String finishSufix = binopLabel.enumLabel("and_finish");
 
         // Plan:
-        // - jump to FALSE if X fails, otherwise continue (jump to CHECK_Y)
-        // - CHECK_Y: jump to TRUE if Y success, otherwise continue (jump to FALSE)
+        // - jump to FALSE if lhs fails, otherwise continue (jump to CHECK_rhs)
+        // - CHECK_rhs: jump to TRUE if rhs success, otherwise continue (jump to FALSE)
         // - FALSE  : set result to 0, then finish (jump to FINISH)
         // - TRUE   : set result to 1
         // - FINISH : return the result
 
-        // Jump to FALSE if X is zero
-        Helper.writer.beqz(x, falsePrefix);
+        // Jump to FALSE if lhs is zero
+        Helper.writer.beqz(lhs, falseSufix);
 
-        // Jump to TRUE if Y success
-        try (Register y = yExpr.accept(this)) {
-            // If y is greater than zero, we want to skip to the true label
-            Helper.writer.bgtz(y, truePrefix);
+        // Jump to TRUE if rhs success
+        try (Register rhs = rhsExpr.accept(this)) {
+            // If rhs is greater than zero, we want to skip to the true label
+            Helper.writer.bgtz(rhs, trueSufix);
         }
 
         // FALSE: Set result to 0, jump to finish
-        writer.withLabel(falsePrefix).li(result, 0);
-        writer.b(finishPrefix);
+        writer.withLabel(falseSufix).li(result, 0);
+        writer.b(finishSufix);
 
         // TRUE : Set result to 1
-        writer.withLabel(truePrefix).li(result, 1);
+        writer.withLabel(trueSufix).li(result, 1);
 
         // Emit finish label
-        writer.withLabel(finishPrefix).nop();
+        writer.withLabel(finishSufix).nop();
 
         return result;
     }
 
-    private Register or(Register x, Expr yExpr) {
+    private Register or(Register lhs, Expr rhsExpr) {
         // Generate a result register
         Register result = Helper.registers.get();
 
-        // Generate a "false", "true", "end" label ahead of time
-        String falsePrefix = binopLabel.enumLabel("or_false");
-        String truePrefix = binopLabel.enumLabel("or_true");
-        String finishPrefix = binopLabel.enumLabel("or_finish");
+        // Generate labels with "false", "true", "end" sufixes ahead of time
+        String falseSufix = binopLabel.enumLabel("or_false");
+        String trueSufix = binopLabel.enumLabel("or_true");
+        String finishSufix = binopLabel.enumLabel("or_finish");
 
         // Plan:
-        // - jump to TRUE if X success, otherwise continue (jump to CHECK_Y)
-        // - CHECK_Y: continue if Y success, otherwise jump to FALSE
+        // - jump to TRUE if lhs success, otherwise continue (jump to CHECK_rhs)
+        // - CHECK_rhs: continue if rhs success, otherwise jump to FALSE
         // - TRUE   : set result to 1 (jump to FINISH)
         // - FALSE  : set result to 0
         // - FINISH : return the result
 
-        // Jump to TRUE if X success
-        writer.bnez(x, truePrefix);
+        // Jump to TRUE if lhs success
+        writer.bnez(lhs, trueSufix);
 
-        // Jump to FALSE if Y fail
-        try (Register y = yExpr.accept(this)) {
-            // If y is greater than zero, we want to skip to the true label
-            writer.beqz(y, falsePrefix);
+        // Jump to FALSE if rhs fail
+        try (Register rhs = rhsExpr.accept(this)) {
+            // If rhs is greater than zero, we want to skip to the true label
+            writer.beqz(rhs, falseSufix);
         }
 
         // TRUE : Set result to 1, jump to finish
-        writer.withLabel(truePrefix).li(result, 1);
-        writer.b(finishPrefix);
+        writer.withLabel(trueSufix).li(result, 1);
+        writer.b(finishSufix);
 
         // FALSE: Set result to 0
-        writer.withLabel(falsePrefix).li(result, 0);
+        writer.withLabel(falseSufix).li(result, 0);
 
         // Emit finish label
-        writer.withLabel(finishPrefix).nop();
+        writer.withLabel(finishSufix).nop();
 
         return result;
     }
@@ -388,7 +388,6 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         writer.newSection("text");
 
         try (OutputWriter scope = writer.scope()) {
-
             writer.withLabel("main").newSection("globl %s", "main");
             writer.jal("func_main_start");
             Register.paramRegs[0].set(Register.v0);
@@ -396,7 +395,6 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
             writer.syscall();
 
             super.visitProgram(p);
-
         }
 
         assert writer.getIndentLevel() == 0;
@@ -417,20 +415,20 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
     }
 
     @Override
-    public Register visitFunDecl(FunDecl f) {
+    public Register visitFunDecl(FunDecl fd) {
         // Ignore inbuilt declarations
-        if (f.isPreDefined) {
+        if (fd.isPreDefined) {
             return null;
         }
 
-        f.globalName = funcLabel.addLabel(f.name + "_start");
-        writer.withLabel(f.globalName).comment("%s", f);
+        fd.globalName = funcLabel.addLabel(fd.name + "_start");
+        writer.withLabel(fd.globalName).comment("%s", fd);
 
-        String epilogueLabel = funcLabel.addLabel(f.name + "_epilogue");
+        String epilogueLabel = funcLabel.addLabel(fd.name + "_epilogue");
 
         frameOffset = 0; // reset frame offset to 0 because we only care about it per function
         // Allocate space for arguments on stack
-        allocateStackSpace(f.params, false);
+        allocateStackSpace(fd.params, false);
 
         try (OutputWriter scope = writer.scope()) {
             /*
@@ -442,7 +440,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
 
             writer.comment("prologue");
             try (OutputWriter innerScope = writer.scope()) {
-                // Snapshot our caller's registers
+                // Save our caller's registers
                 saveRegisters();
 
                 // Our stack pointer is just to tell us where to allocate space next.
@@ -452,8 +450,8 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
                 Register.fp.set(Register.sp);
 
                 // Jump over our parameters
-                writer.comment("Skip over parameters: %s", Arrays.toString(f.params.toArray()));
-                for (VarDecl vd : f.params) {
+                writer.comment("Skip over parameters: %s", Arrays.toString(fd.params.toArray()));
+                for (VarDecl vd : fd.params) {
                     paramsSize += allignTo4Bytes(vd.type.sizeOf());
                 }
                 Register.sp.sub(paramsSize);
@@ -463,10 +461,10 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
                 Register.ra.loadAddress(epilogueLabel);
             }
 
-            // do some stuff
+            // function contents visitor
             writer.comment("function contents");
             try (OutputWriter innerScope = writer.scope()) {
-                visitBlock(f.block);
+                visitBlock(fd.block);
 
                 writer.comment("Store default return value at $v0");
                 Register.v0.loadImmediate(0);
@@ -526,7 +524,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
             // Iterate through args
             int totalArgSize = 0;
             for (int i = 0; i < fc.fd.params.size(); i++) {
-                VarDecl decl = fc.fd.params.get(i);
+                VarDecl vd = fc.fd.params.get(i);
                 Expr expr = fc.params.get(i);
                 Type type = expr.type;
 
@@ -535,8 +533,8 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
 
                 Register.sp.sub(argSize);
 
-                int offset = decl.getGenStackOffset();
-                writer.comment("Storing arg $d (%s) at $sp", i, expr, offset);
+                int offset = vd.getGenStackOffset();
+                writer.comment("Storing arg %d of value (%s) at %d($sp)", i, expr, offset);
                 try (OutputWriter argScope = writer.scope(); Register sourceValue = expr.accept(this)) {
                     Register targetAddress = Register.sp;
                     storeValue(sourceValue, type, targetAddress, 0);
@@ -711,8 +709,8 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
     @Override
     public Register visitAssign(Assign a) {
         writer.comment(a);
-        try (OutputWriter scope = writer.scope(); Register pointer = this.addressOf(a.lhs); Register value = a.rhs.accept(this)) {
-            storeValue(value, a.rhs.type, pointer, 0);
+        try (OutputWriter scope = writer.scope(); Register lhsPointer = this.addressOf(a.lhs); Register rhsRegister = a.rhs.accept(this)) {
+            storeValue(rhsRegister, a.rhs.type, lhsPointer, 0);
         }
         return null;
     }
@@ -722,9 +720,9 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
         writer.comment(r);
         try (OutputWriter scope = writer.scope()) {
             if (r.expression != null) {
-                try (Register value = r.expression.accept(this)) {
+                try (Register rhsRegister = r.expression.accept(this)) {
                     writer.comment("Store return value at $v0");
-                    Register.v0.set(value);
+                    Register.v0.set(rhsRegister);
                 }
             } else {
                 writer.comment("Store default return value at $v0");

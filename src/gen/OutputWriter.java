@@ -2,7 +2,6 @@ package gen;
 
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class OutputWriter implements AutoCloseable {
     private PrintWriter writer;
@@ -21,11 +20,10 @@ public class OutputWriter implements AutoCloseable {
         wasNewline = true;
     }
 
-    public OutputWriter leadNewline() {
+    public void leadNewline() {
         if (!wasNewline) {
             newline();
         }
-        return this;
     }
 
     @Override

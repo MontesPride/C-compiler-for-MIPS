@@ -75,7 +75,7 @@ public class Register implements AutoCloseable {
     public void free() {
         for (Register r : unfreeable) {
             if (r == this) {
-                throw new RuntimeException("Attempted to free non-freeable register.");
+                throw new RuntimeException("Attempted to free an unfreeable register!");
             }
         }
         Helper.registers.free(this);
@@ -91,27 +91,27 @@ public class Register implements AutoCloseable {
 
     public void loadAddress(String label) { Helper.writer.la(this, label); }
 
-    public void loadByte(Register from, int offset) { Helper.writer.lb(this, from, offset); }
+    public void loadByte(Register fromAddress, int offset) { Helper.writer.lb(this, fromAddress, offset); }
 
-    public void loadWord(Register from, int offset) { Helper.writer.lw(this, from, offset); }
+    public void loadWord(Register fromAddress, int offset) { Helper.writer.lw(this, fromAddress, offset); }
 
     public void storeByteAt(Register toAddress, int offset) { Helper.writer.sb(this, toAddress, offset); }
 
     public void storeWordAt(Register toAddress, int offset) { Helper.writer.sw(this, toAddress, offset); }
 
-    public void set(Register from) { Helper.writer.move(this, from); }
+    public void set(Register fromAddress) { Helper.writer.move(this, fromAddress); }
 
-    public void moveTo(Register target) { Helper.writer.move(target, this); }
+    public void moveTo(Register toAddress) { Helper.writer.move(toAddress, this); }
 
     public void jump() { Helper.writer.jr(this); }
 
     public void add(int i) { Helper.writer.add(this, this, i); }
 
-    public void add(Register y) { Helper.writer.add(this, this, y); }
+    public void add(Register register) { Helper.writer.add(this, this, register); }
 
     public void sub(int i) { Helper.writer.sub(this, this, i); }
 
-    public void sub(Register subtract) { Helper.writer.sub(this, this, subtract); }
+    public void sub(Register register) { Helper.writer.sub(this, this, register); }
 
     public void mul(int multiplier) { Helper.writer.mul(this, this, multiplier); }
 

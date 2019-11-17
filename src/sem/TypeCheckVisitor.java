@@ -356,7 +356,7 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
         Type rhsType = a.rhs.accept(this);
 
         if (lhsType == BaseType.VOID || lhsType instanceof ArrayType) {
-            error("lhs cannot be %s", lhsType);
+            error("lhsType cannot be %s", lhsType);
         }
 
         if (!isSameType(lhsType, rhsType)) {

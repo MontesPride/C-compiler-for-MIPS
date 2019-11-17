@@ -2,21 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="TypeChecker mega fix.">
-      <change afterPath="$PROJECT_DIR$/src/gen/Helper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gen/PreDefinedVisitor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gen/Registers.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/my_valid_test.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gen/AssignVisitor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gen/CodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/CodeGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gen/CodeGeneratorVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/CodeGeneratorVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gen/DataVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/DataVisitor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gen/OutputWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/OutputWriter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gen/PrefixAdder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/Labeller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gen/Register.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/Register.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gen/TextVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/TextVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sem/TypeCheckVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/fibonacci.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fibonacci.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/my_valid_test.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/my_valid_test.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -57,7 +51,7 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="TODO_SCOPE" value="All Places" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/tests" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="options.lastSelected" value="org.jetbrains.plugins.scala.compiler.ScalaCompileServerForm" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.splitter.main.proportions" value="0.3" />
@@ -86,7 +80,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Fibonacci-gen">
+  <component name="RunManager" selected="Application.my_valid_test-gen">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -793,7 +787,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573493074848</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Initial testing of part 3.">
+      <created>1573507416932</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1573507416932</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -810,7 +811,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Variable and function declarations change, to make the code look nicer and better in general." />
     <MESSAGE value="Minor stylistic fixes. Ready for overnight test." />
     <MESSAGE value="Fixes: Struct declaration," />
     <MESSAGE value="Fixed struct declaration." />
@@ -835,7 +835,8 @@
     <MESSAGE value="AST Printer fix, forgot I shouldn't print out the escaped string. Initial commit for part 3." />
     <MESSAGE value="TypeChecker mega fix." />
     <MESSAGE value="typo fix." />
-    <option name="LAST_COMMIT_MESSAGE" value="typo fix." />
+    <MESSAGE value="Initial testing of part 3." />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial testing of part 3." />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

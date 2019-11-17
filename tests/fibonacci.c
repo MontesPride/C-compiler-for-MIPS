@@ -1,7 +1,8 @@
 #include "minic-stdlib.h"
 
+int n;
+
 void main() {
-  int n;
   int first;
   int second;
   int next;
