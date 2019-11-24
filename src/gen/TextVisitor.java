@@ -242,7 +242,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
             lhsRegister.storeWordAt(rhsRegister, offset);
         } else if (type instanceof StructType) {
 
-            // Note, sourceValue is actually referring to the struct's address
+            // Note, lhsRegister is actually referring to the struct's address
             // Don't forget this!
 
             try (OutputWriter scope = writer.scope()) {
@@ -251,8 +251,8 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
                 int totalSize = 0;
                 for (VarDecl vd : std.variables) {
                     // Read the value at the struct address (which may or may not have been incremented)
-                    try (Register innerSourceValue = getValue(lhsRegister, vd.type)) {
-                        storeValue(innerSourceValue, vd.type, rhsRegister, offset);
+                    try (Register innerVariableRegister = getValue(lhsRegister, vd.type)) {
+                        storeValue(innerVariableRegister, vd.type, rhsRegister, offset);
                     }
 
                     // Increment our read offset and struct address by the size we've just read
@@ -690,7 +690,7 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
 
     @Override
     public Register visitWhile(While w) {
-        String startLabel = whileLabel.enumLabel("begin");
+        String startLabel = whileLabel.enumLabel("start");
         String endLabel = whileLabel.enumLabel("end");
 
         writer.withLabel(startLabel).comment("while (%s)", w.expression);

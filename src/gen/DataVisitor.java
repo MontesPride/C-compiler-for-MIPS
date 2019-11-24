@@ -80,7 +80,7 @@ public class DataVisitor extends CodeGeneratorVisitor<Void> {
         varDecl.setGlobalName(globalLabel);
 
         int size = varDecl.type.sizeOf();
-        writer.withLabel(globalLabel).dataNeedSize(size);
+        writer.withLabel(globalLabel).dataNeedSize(allignTo4Bytes(size));
     }
 
 }
