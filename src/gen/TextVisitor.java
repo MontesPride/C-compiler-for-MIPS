@@ -464,7 +464,8 @@ public class TextVisitor extends CodeGeneratorVisitor<Register> {
             // function contents visitor
             writer.comment("function contents");
             try (OutputWriter innerScope = writer.scope()) {
-                visitBlock(fd.block);
+                //visitBlock(fd.block);
+                fd.block.accept(this);
 
                 writer.comment("Store default return value at $v0");
                 Register.v0.loadImmediate(0);
