@@ -79,8 +79,8 @@ public class DataVisitor extends CodeGeneratorVisitor<Void> {
         String globalLabel = this.globalLabel.addLabel(varDecl.varName);
         varDecl.setGlobalName(globalLabel);
 
-        int size = varDecl.type.sizeOf();
-        writer.withLabel(globalLabel).dataNeedSize(allignTo4Bytes(size));
+        int size = allignTo4Bytes(varDecl.type.sizeOf());
+        writer.withLabel(globalLabel).dataNeedSize(size);
     }
 
 }
