@@ -110,6 +110,7 @@ public class Parser {
             }
         }
 
+        nextToken();
         error(expected);
         return null;
     }
@@ -632,9 +633,9 @@ public class Parser {
 
         while (accept(TokenClass.DOT, TokenClass.LSBR)) {
             if (accept(TokenClass.DOT)) {
-                return parseFieldAccess(lhs);
+                lhs = parseFieldAccess(lhs);
             } else if (accept(TokenClass.LSBR)) {
-                return parseArrayAccess(lhs);
+                lhs =  parseArrayAccess(lhs);
             }
         }
         return lhs;
