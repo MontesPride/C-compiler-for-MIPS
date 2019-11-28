@@ -58,7 +58,7 @@ public class DataVisitor extends CodeGeneratorVisitor<Void> {
         try (OutputWriter scope = writer.scope()) {
             for (VarDecl vd : structType.std.variables) {
                 name = labeller.addLabel(vd.varName);
-                // v.setGlobalLabel(label); // we can't use this. each `v` is global to all declarations of this struct
+                // vd.setGlobalLabel(label); // we can't use this. each `vd` is global to all declarations of this struct
                 varDecl.setStructFieldLabel(vd.varName, name);
 
                 writer.withLabel(name).dataNeedSize(allignTo4Bytes(vd.type.sizeOf()));
@@ -69,10 +69,10 @@ public class DataVisitor extends CodeGeneratorVisitor<Void> {
     }
 
     public void visitGlobalVarDecl(VarDecl varDecl) {
-        super.visitVarDecl(varDecl);
+        //super.visitVarDecl(varDecl);
 
         if (varDecl.type instanceof StructType) {
-            visitGlobalStructDecl(varDecl, (StructType) varDecl.type);
+            visitGlobalStructDecl(varDecl, (StructType)varDecl.type);
             return;
         }
 

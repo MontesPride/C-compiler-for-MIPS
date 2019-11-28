@@ -97,9 +97,7 @@ public abstract class CodeGeneratorVisitor<T> implements ASTVisitor<T> {
     }
 
     @Override
-    public T visitStrLiteral(StrLiteral sl) {
-        return null;
-    }
+    public T visitStrLiteral(StrLiteral sl) { return null; }
 
     @Override
     public T visitBinOp(BinOp bo) {
