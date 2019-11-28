@@ -737,7 +737,7 @@ public class Parser {
 
     private ValueAtExpr parseValueAt() {
         expect(TokenClass.ASTERIX);
-        Expr expression = parseExpression();
+        Expr expression = parseExpression_2();
         return new ValueAtExpr(expression);
     }
 
