@@ -5,8 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gen/TextVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gen/TextVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/my_valid_test.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/my_valid_test.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -48,7 +46,7 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="TODO_SCOPE" value="All Places" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../inf-ct-master" />
     <property name="options.lastSelected" value="org.jetbrains.plugins.scala.compiler.ScalaCompileServerForm" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.splitter.main.proportions" value="0.3" />
@@ -296,6 +294,46 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="binop-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/binop.c binop.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="data.literals-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/data.literals.c data.literals.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="data.spacing-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/data.spacing.c data.spacing.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="data.structs-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/data.structs.c data.structs.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="empty.main-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/empty.main.c empty.main.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="f.param.1-parser" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="ct-19-20" />
@@ -312,10 +350,82 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="func.args-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/func.args.c func.args.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="func.return.smaller-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/func.return.smaller.c func.return.smaller.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="func.returns-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/func.returns.c func.returns.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="func.simple-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/func.simple.c func.simple.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="hello_world-gen" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="ct-19-20" />
       <option name="PROGRAM_PARAMETERS" value="-gen tests/hello_world.c hello_world.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="if-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/if.c if.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="inbuilt.call.print_i-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/inbuilt.call.print_i.c inbuilt.call.print_i.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="int.lit-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/int.lit.c int.lit.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="killer-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/killer.c killer.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="label.struct-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/label.struct.c label.struct.out" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -424,6 +534,70 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="positional.encoding-ast" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-ast tests/positional.encoding.c positional.encoding.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="positional.encoding-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/positional.encoding.c positional.encoding.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="stack.local-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/stack.local.c stack.local.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="struct-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/struct.c struct.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="syscall-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/syscall.c syscall.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="valueAt-ast" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-ast tests/valueAt.c valueAt.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="valueAt-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/valueAt.c valueAt.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="while-gen" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ct-19-20" />
+      <option name="PROGRAM_PARAMETERS" value="-gen tests/while.c while.out" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="while_true-gen" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="ct-19-20" />
@@ -501,6 +675,28 @@
       <item itemvalue="Application.main-ast" />
       <item itemvalue="Application.Fibonacci-gen" />
       <item itemvalue="Application.my_valid_test-gen" />
+      <item itemvalue="Application.positional.encoding-gen" />
+      <item itemvalue="Application.binop-gen" />
+      <item itemvalue="Application.data.literals-gen" />
+      <item itemvalue="Application.data.spacing-gen" />
+      <item itemvalue="Application.data.structs-gen" />
+      <item itemvalue="Application.empty.main-gen" />
+      <item itemvalue="Application.func.args-gen" />
+      <item itemvalue="Application.func.return.smaller-gen" />
+      <item itemvalue="Application.func.returns-gen" />
+      <item itemvalue="Application.func.simple-gen" />
+      <item itemvalue="Application.if-gen" />
+      <item itemvalue="Application.inbuilt.call.print_i-gen" />
+      <item itemvalue="Application.int.lit-gen" />
+      <item itemvalue="Application.killer-gen" />
+      <item itemvalue="Application.label.struct-gen" />
+      <item itemvalue="Application.stack.local-gen" />
+      <item itemvalue="Application.struct-gen" />
+      <item itemvalue="Application.syscall-gen" />
+      <item itemvalue="Application.positional.encoding-ast" />
+      <item itemvalue="Application.valueAt-gen" />
+      <item itemvalue="Application.valueAt-ast" />
+      <item itemvalue="Application.while-gen" />
       <item itemvalue="Application.my_valid_test-parser" />
       <item itemvalue="Application.my_valid_test-ast" />
       <item itemvalue="Application.hello_world-gen" />
@@ -816,7 +1012,49 @@
       <option name="project" value="LOCAL" />
       <updated>1574006471891</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Found one bug in the parser, hopefully it's the one I was looking for.">
+      <created>1574008434276</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1574008434276</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Global variable declaration fix.">
+      <created>1574609562741</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1574609562741</updated>
+    </task>
+    <task id="LOCAL-00042" summary="FINALLY FIXED MY PARSER LUL">
+      <created>1574944306904</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1574944306904</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Yet another quick fix.">
+      <created>1574946255232</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1574946255232</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Minor changes.">
+      <created>1574946673218</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1574946673218</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Fix">
+      <created>1574949465750</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1574949465750</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -833,12 +1071,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixes: Struct declaration," />
-    <MESSAGE value="Fixed struct declaration." />
-    <MESSAGE value="Fixed multi line comment. (Now /*/ doesnt pass as a start and an end of a comment)" />
-    <MESSAGE value="Character escaping fix (according to the specification). Parser fix" />
-    <MESSAGE value="Minor fix" />
-    <MESSAGE value="Missing break fix." />
     <MESSAGE value="I don't know why function_application_4 crashes." />
     <MESSAGE value="Part 2 initial commit. Now I am rebuilding the parser." />
     <MESSAGE value="Part 2, parser is now rebuilt." />
@@ -858,7 +1090,13 @@
     <MESSAGE value="typo fix." />
     <MESSAGE value="Initial testing of part 3." />
     <MESSAGE value="Minor cosmetic fixes. There is still one bug in the parser that I am unable to find :/" />
-    <option name="LAST_COMMIT_MESSAGE" value="Minor cosmetic fixes. There is still one bug in the parser that I am unable to find :/" />
+    <MESSAGE value="Found one bug in the parser, hopefully it's the one I was looking for." />
+    <MESSAGE value="Global variable declaration fix." />
+    <MESSAGE value="FINALLY FIXED MY PARSER LUL" />
+    <MESSAGE value="Yet another quick fix." />
+    <MESSAGE value="Minor changes." />
+    <MESSAGE value="Fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
