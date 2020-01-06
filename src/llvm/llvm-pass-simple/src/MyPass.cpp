@@ -63,13 +63,13 @@ struct MyPass : public FunctionPass {
     bool changed = false;
 
     do {
-      errs() << "\nI saw a function called: " << F.getName() << " (pass " << pass << ")\n";
+      errs() << "\nI saw a function called: " << F.getName() << " (pass: " << pass << ")\n";
       pass++;
       changed = findAndRemoveDeadFunctions(F);
       result |= changed;
     } while (changed);
 
-    errs() << "\n--------\n";
+    errs() << "\n-----------------------------------\n";
 
     return result;
   }
