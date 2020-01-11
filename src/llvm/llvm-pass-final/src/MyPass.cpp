@@ -162,9 +162,9 @@ struct MyPass : public FunctionPass {
               }
             }
           } else {
-            auto peek = i;
-            ++peek;
-            successors.insert(&*peek);
+            auto peekNextInstruction = i;
+            ++peekNextInstruction;
+            successors.insert(&*peekNextInstruction);
           }
 
           set<Value*> outDest;
