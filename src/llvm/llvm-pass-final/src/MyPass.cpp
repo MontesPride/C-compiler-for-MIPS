@@ -95,7 +95,7 @@ struct MyPass : public FunctionPass {
 
     map<Value *, set<Value *>> inSet, outSet, previousInSet, previousOutSet,
         difference;
-        map<PHINode*, map<BasicBlock*, set<Value*>>> phiMap;
+    map<PHINode*, map<BasicBlock*, set<Value*>>> phiMap;
 
     for (BasicBlock& bb : F) {
       for (BasicBlock::iterator i = bb.begin(); i != bb.end(); ++i) {
@@ -136,12 +136,15 @@ struct MyPass : public FunctionPass {
           }
 
           copy(outSet[instruction].begin(), outSet[instruction].end(),
-               inserter(difference[instruction], difference[instruction].begin()));
+               inserter(difference[instruction],
+                        difference[instruction].begin()));
           difference[instruction].erase(instruction);
 
           set<Value*> inDest;
-          set_union(instructionUsers.begin(), instructionUsers.end(), difference[instruction].begin(),
-                    difference[instruction].end(), inserter(inDest, inDest.begin()));
+          set_union(instructionUsers.begin(), instructionUsers.end(),
+                    difference[instruction].begin(),
+                    difference[instruction].end(),
+                    inserter(inDest, inDest.begin()));
 
           inSet[instruction] = inDest;
 
@@ -176,7 +179,8 @@ struct MyPass : public FunctionPass {
               if (instruction->isTerminator()) {
                 auto phiSuccessorSet = phiMap[phiSuccessor][&*bb];
 
-                set_union(phiSuccessorSet.begin(), phiSuccessorSet.end(), difference[phiSuccessor].begin(),
+                set_union(phiSuccessorSet.begin(), phiSuccessorSet.end(),
+                          difference[phiSuccessor].begin(),
                           difference[phiSuccessor].end(),
                           inserter(swapped, swapped.begin()));
               } else {
@@ -196,7 +200,8 @@ struct MyPass : public FunctionPass {
             for (auto value : phiSuccessors) {
               auto phiSuccessorSet = phiMap[value][&*bb];
               set<Value*> newPhiUnion;
-              set_union(phiSuccessorSet.begin(), phiSuccessorSet.end(), phiUnion.begin(), phiUnion.end(),
+              set_union(phiSuccessorSet.begin(), phiSuccessorSet.end(),
+                        phiUnion.begin(), phiUnion.end(),
                         inserter(newPhiUnion, newPhiUnion.begin()));
               phiUnion = newPhiUnion;
             }
@@ -218,8 +223,8 @@ struct MyPass : public FunctionPass {
       for (BasicBlock::iterator i = bb->begin(); i != bb->end(); ++i) {
         Instruction* instruction = &*i;
         bool isInstructionDead = (outSet[instruction].find(instruction) ==
-                       outSet[instruction].end()) &&
-                      canBeRemoved(instruction);
+                                  outSet[instruction].end()) &&
+                                 canBeRemoved(instruction);
         if (isInstructionDead) workList.push_back(instruction);
       }
     }
