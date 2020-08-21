@@ -3,7 +3,7 @@ package lexer;
 import util.Position;
 
 /**
- * @author cdubach
+ * @author sfilipiak
  */
 public class Token {
 

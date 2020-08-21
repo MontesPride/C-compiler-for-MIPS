@@ -3,7 +3,7 @@ package lexer;
 import java.io.*;
 
 /**
- * @author cdubach
+ * @author sfilipiak
  */
 public class Scanner {
 

@@ -2,7 +2,7 @@ package util;
 
 
 /**
- * @author cdubach
+ * @author sfilipiak
  */
 public class Position {
 

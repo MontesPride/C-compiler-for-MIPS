@@ -3,11 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="e0013b9d-a7c9-42b1-ad54-ec51f865535e" name="Default" comment="TypeChecker mega fix.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ct-19-20/parser/Parser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/my_valid_test.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/my_valid_test.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lexer/Scanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexer/Scanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lexer/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexer/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/ParserPart1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/ParserPart1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Position.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Position.java" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,6 +34,11 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1RhUQHfzR5wMhWPuf6aPNhu74rJ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="GenerateAntBuildDialog.backupFiles" value="true" />
     <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
@@ -46,7 +52,7 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="TODO_SCOPE" value="All Places" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../inf-ct-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="options.lastSelected" value="org.jetbrains.plugins.scala.compiler.ScalaCompileServerForm" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.splitter.main.proportions" value="0.3" />
@@ -63,19 +69,13 @@
       <recent name="$PROJECT_DIR$/grammar" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
   <component name="RunManager" selected="Application.my_valid_test-gen">
+    <configuration default="true" type="Applet">
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -209,12 +209,6 @@
       <testRegexps />
       <envs />
       <method />
-    </configuration>
-    <configuration default="true" type="Applet">
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
     </configuration>
     <configuration name="Fibonacci-ast" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
@@ -666,54 +660,54 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.Tictactoe-lexer" />
-      <item itemvalue="Application.Tictactoe-ast" />
-      <item itemvalue="Application.Fibonacci-parser" />
-      <item itemvalue="Application.Fibonacci-lexer" />
       <item itemvalue="Application.Fibonacci-ast" />
-      <item itemvalue="Application.main-gen" />
-      <item itemvalue="Application.main-ast" />
       <item itemvalue="Application.Fibonacci-gen" />
-      <item itemvalue="Application.my_valid_test-gen" />
-      <item itemvalue="Application.positional.encoding-gen" />
+      <item itemvalue="Application.Fibonacci-lexer" />
+      <item itemvalue="Application.Fibonacci-parser" />
+      <item itemvalue="Application.Fibonacci-sem" />
+      <item itemvalue="Application.Tictactoe-ast" />
+      <item itemvalue="Application.Tictactoe-lexer" />
+      <item itemvalue="Application.Tictactoe-parser" />
+      <item itemvalue="Application.Tictactoe-sem" />
       <item itemvalue="Application.binop-gen" />
       <item itemvalue="Application.data.literals-gen" />
       <item itemvalue="Application.data.spacing-gen" />
       <item itemvalue="Application.data.structs-gen" />
       <item itemvalue="Application.empty.main-gen" />
+      <item itemvalue="Application.f.param.1-parser" />
+      <item itemvalue="Application.f.param.2-parser" />
       <item itemvalue="Application.func.args-gen" />
       <item itemvalue="Application.func.return.smaller-gen" />
       <item itemvalue="Application.func.returns-gen" />
       <item itemvalue="Application.func.simple-gen" />
+      <item itemvalue="Application.hello_world-gen" />
       <item itemvalue="Application.if-gen" />
       <item itemvalue="Application.inbuilt.call.print_i-gen" />
       <item itemvalue="Application.int.lit-gen" />
       <item itemvalue="Application.killer-gen" />
       <item itemvalue="Application.label.struct-gen" />
+      <item itemvalue="Application.main-ast" />
+      <item itemvalue="Application.main-gen" />
+      <item itemvalue="Application.myEdgeTest-ast" />
+      <item itemvalue="Application.myEdgeTest-lexer" />
+      <item itemvalue="Application.myEdgeTest-parser" />
+      <item itemvalue="Application.myEdgeTest-sem" />
+      <item itemvalue="Application.myTest-ast" />
+      <item itemvalue="Application.myTest-lexer" />
+      <item itemvalue="Application.myTest-parser" />
+      <item itemvalue="Application.myTest-sem" />
+      <item itemvalue="Application.my_valid_test-ast" />
+      <item itemvalue="Application.my_valid_test-gen" />
+      <item itemvalue="Application.my_valid_test-parser" />
+      <item itemvalue="Application.positional.encoding-ast" />
+      <item itemvalue="Application.positional.encoding-gen" />
       <item itemvalue="Application.stack.local-gen" />
       <item itemvalue="Application.struct-gen" />
       <item itemvalue="Application.syscall-gen" />
-      <item itemvalue="Application.positional.encoding-ast" />
-      <item itemvalue="Application.valueAt-gen" />
       <item itemvalue="Application.valueAt-ast" />
+      <item itemvalue="Application.valueAt-gen" />
       <item itemvalue="Application.while-gen" />
-      <item itemvalue="Application.my_valid_test-parser" />
-      <item itemvalue="Application.my_valid_test-ast" />
-      <item itemvalue="Application.hello_world-gen" />
-      <item itemvalue="Application.f.param.1-parser" />
-      <item itemvalue="Application.f.param.2-parser" />
       <item itemvalue="Application.while_true-gen" />
-      <item itemvalue="Application.Fibonacci-sem" />
-      <item itemvalue="Application.Tictactoe-sem" />
-      <item itemvalue="Application.myTest-sem" />
-      <item itemvalue="Application.myEdgeTest-sem" />
-      <item itemvalue="Application.Tictactoe-parser" />
-      <item itemvalue="Application.myTest-parser" />
-      <item itemvalue="Application.myTest-lexer" />
-      <item itemvalue="Application.myTest-ast" />
-      <item itemvalue="Application.myEdgeTest-parser" />
-      <item itemvalue="Application.myEdgeTest-ast" />
-      <item itemvalue="Application.myEdgeTest-lexer" />
     </list>
   </component>
   <component name="SbtLocalSettings">
@@ -1097,6 +1091,12 @@
     <MESSAGE value="Minor changes." />
     <MESSAGE value="Fix" />
     <option name="LAST_COMMIT_MESSAGE" value="Fix" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="656" y="118" width="607" height="804" key="find.popup" timestamp="1598012147706">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="656" y="118" width="607" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1598012147706" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
